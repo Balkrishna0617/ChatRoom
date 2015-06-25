@@ -23,6 +23,21 @@ ios.on('connection', function(socket){
 	socket.on('new user', function(data, callback){
 		console.log("data : ", data);
 		
+		if(nickname[data.username])
+		{
+			callback({success:false});
+		}
+		else{
+			callback({success:true});
+			// socket.set('avtar', data.avtar);
+			nickname[data.username] = socket;
+		    // i = Object.keys(nickname);
+		    // console.log("socket key:", i);
+		    //console.log("Updated socket:",socket);
+   			// ios.sockets.emit('user-list', i);
+		}
+
+		// callback({success:true});
 		// console.log("nickname : ", nickname);
 		// if(nickname[data])
 		// {
