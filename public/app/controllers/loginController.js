@@ -1,9 +1,11 @@
 angular.module('Controllers',[])
-.controller('loginCtrl', function ($scope, $location, $localStorage, $socket){
+.controller('loginCtrl', function ($scope, $location, $rootScope, $socket){
 	// Varialbles Initialization.
-	$scope.userAvatar = "Avatar1";
+	$scope.userAvatar = "Avatar1.jpg";
 	$scope.isErrorReq = false;
 	$scope.isErrorNick = false;
+	$scope.username = "";
+	// $rootScope.username = "";
 	// $localStorage.loggedIn = false;
 
 	// redirection if user logged in.
@@ -20,7 +22,8 @@ angular.module('Controllers',[])
 			$socket.emit('new user',{username : $scope.username, userAvatar : $scope.userAvatar},function(data){
 				console.log("socket event fired");
 				if(data.success == true){
-					$localStorage.loggedIn = true;
+					$rootScope.username = $scope.username;
+					$rootScope.userAvatar = $scope.userAvatar;
 					$location.path('/ChatRoom');					
 				}else{
 					$scope.isErrorNick = true;
@@ -28,14 +31,6 @@ angular.module('Controllers',[])
 				}			
 			});
 
-			// if($scope.username === 'Ankit'){
-			// 	$scope.isErrorNick = true;
-			// 	$scope.isErrorReq = true;
-			// }else{
-
-			// 	$localStorage.loggedIn = true;
-			// 	$location.path('/ChatRoom');
-			// }
 		}else{
 			$scope.errMsg = "Enter nickname.";
 			$scope.isErrorReq = true;

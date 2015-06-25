@@ -1,29 +1,31 @@
 angular.module('Controllers')
-.controller('chatRoomCtrl', function ($scope, $socket){
+.controller('chatRoomCtrl', function ($scope, $rootScope, $socket){
 	// Varialbles Initialization.
 	$scope.isMsgBoxEmpty = false;
 	$scope.isFileSelected = false;
-	$scope.moreUsers = true;
 	$scope.users = [
-		{ username : "Ankit Sawant", userAvatar : "user1-128x128.jpg"},
-		{ username : "Madhuri Jadhav", userAvatar : "user3-128x128.jpg"},
-		{ username : "Mayuri Jadhav", userAvatar : "user3-128x128.jpg"},
-		{ username : "Manoj Jadhav", userAvatar : "user8-128x128.jpg"},
-		{ username : "Ankit Sawant", userAvatar : "user1-128x128.jpg"},
-		{ username : "Madhuri Jadhav", userAvatar : "user3-128x128.jpg"},
-		{ username : "Mayuri Jadhav", userAvatar : "user3-128x128.jpg"},
-		{ username : "Manoj Jadhav", userAvatar : "user8-128x128.jpg"},
-		{ username : "Ankit Sawant", userAvatar : "user1-128x128.jpg"},
-		{ username : "Madhuri Jadhav", userAvatar : "user3-128x128.jpg"},
-		{ username : "Mayuri Jadhav", userAvatar : "user3-128x128.jpg"},
-		{ username : "Manoj Jadhav", userAvatar : "user8-128x128.jpg"}				
+		{ username : "Ankit Sawant", userAvatar : "Avatar1.jpg"},
+		{ username : "Madhuri Jadhav", userAvatar : "Avatar3.jpg"},
+		{ username : "Mayuri Jadhav", userAvatar : "Avatar3.jpg"},
+		{ username : "Manoj Jadhav", userAvatar : "Avatar8.jpg"},
+		{ username : "Ankit Sawant", userAvatar : "Avatar1.jpg"},
+		{ username : "Madhuri Jadhav", userAvatar : "Avatar3.jpg"},
+		{ username : "Mayuri Jadhav", userAvatar : "Avatar3.jpg"},
+		{ username : "Manoj Jadhav", userAvatar : "Avatar8.jpg"},
+		{ username : "Ankit Sawant", userAvatar : "Avatar1.jpg"},
+		{ username : "Madhuri Jadhav", userAvatar : "Avatar3.jpg"},
+		{ username : "Mayuri Jadhav", userAvatar : "Avatar3.jpg"},
+		{ username : "Manoj Jadhav", userAvatar : "Avatar8.jpg"}				
 	];
 
 	$scope.messeges = [
-		{ username : "Ankit Sawant", userAvatar : "user1-128x128.jpg", ownMsg : true, msg : "This is messege from Ankit"},
-		{ username : "Madhuri Jadhav", userAvatar : "user3-128x128.jpg", ownMsg : false, msg : "This is messege from Madhuri"},
-		{ username : "Ankit Sawant", userAvatar : "user1-128x128.jpg", ownMsg : true, msg : "This is messege from Ankit"},
+		{ username : "Ankit Sawant", userAvatar : "Avatar1.jpg", ownMsg : true, msg : "This is messege from Ankit"},
+		{ username : "Madhuri Jadhav", userAvatar : "Avatar3.jpg", ownMsg : false, msg : "This is messege from Madhuri"},
+		{ username : "Ankit Sawant", userAvatar : "Avatar1.jpg", ownMsg : true, msg : "This is messege from Ankit"},
 	];
+
+	console.log("$rootScope.username", $rootScope.username);			
+	console.log("$rootScope.userAvatar", $rootScope.userAvatar);
 	//Messege Box Validations
 	if ( $scope.isMsgBoxEmpty || $scope.isFileSelect) {
 		console.log("user has entered something");
@@ -33,14 +35,27 @@ angular.module('Controllers')
 
 	//Socket Handling of Online members.
 	$socket.on("online-members", function(data){
-		if(data.more-users == true){
 			$scope.users = data.online-membs;
-			$scope.moreUsers = data.more-users;
-		}else{
-			$scope.moreUsers = data.more-users;
-			$scope.noUsers = "No users online.";
-		}
 	});
+
+	$socket.on("new message", function(data){
+		if(data.username == $rootScope.username){
+			data.ownMsg = true;	
+		}else{
+			data.ownMsg = false;
+		}
+		$scope.messeges.push(data);
+	});
+	$scope.sendMsg = function(){
+		$socket.emit("send-message",{ username : $rootScope.username, userAvatar : $rootScope.userAvatar, msg : $scope.chatMsg, msgTime : "23 Jan 5:37 pm" }, function(data){
+			//delivery report code goes here
+		});
+	}
+
+
+
+
+
 	// $scope.errMsg = "Enter Nickname to get started...";
 	// if ($localStorage.nickName){
 	// 	$location.path('/property');
