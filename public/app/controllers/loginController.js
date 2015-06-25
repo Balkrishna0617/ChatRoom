@@ -7,9 +7,9 @@ angular.module('Controllers',[])
 	// $localStorage.loggedIn = false;
 
 	// redirection if user logged in.
-	if($localStorage.loggedIn){
-		$location.path('/ChatRoom');
-	}
+	// if($localStorage.loggedIn){
+	// 	$location.path('/ChatRoom');
+	// }
 
 
 	// Functions for controlling behaviour.

@@ -65,109 +65,53 @@
                           </div><!-- /.direct-chat-text -->
                         </div><!-- /.direct-chat-msg -->
 
-                        <!-- Message to the right -->
+                        <!-- Message. Default to the right -->
                         <div class="direct-chat-msg right">
                           <div class='direct-chat-info clearfix'>
-                            <span class='direct-chat-name pull-right'>Sarah Bullock</span>
-                            <span class='direct-chat-timestamp pull-left'>23 Jan 6:10 pm</span>
+                            <span class='direct-chat-name pull-left'>Alexander Pierce</span>
+                            <span class='direct-chat-timestamp pull-right'>23 Jan 5:37 pm</span>
                           </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="app/css/dist/img/user3-128x128.jpg" alt="message user image" /><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text clearfix">
-                            
-                            <div class="item clearfix">
-                              
-                              <div class="attachment pull-right">
+                          <img class="direct-chat-img" src="app/css/dist/img/user1-128x128.jpg" alt="message user image" /><!-- /.direct-chat-img -->
+                          <div class="direct-chat-text text-right">
+                            Working with AdminLTE on a great new app! Wanna join?
+                           <div class="item">
+                              <div class="attachment clearfix">
                                 <!-- <h4>Attachments:</h4> -->
-                                <p class="pull-right">I would love to.</p>
                                 <h4></h4>
-                                <p class="filename pull-right">
-                                  <img src="app/css/dist/img/user3-128x128.jpg">
+                                <p class="filename">
+                                  <img src="app/css/dist/img/user1-128x128.jpg">
                                 </p>
                                 <!-- <div class="pull-right">
                                   <button class="btn btn-primary btn-sm btn-flat">Open</button>
                                 </div> -->
                               </div><!-- /.attachment -->
-                            </div><!-- /.item-->
+                          </div><!-- /.item-->
+                          </div><!-- /.direct-chat-text -->
+                        </div><!-- /.direct-chat-msg -->                
+
+                        <!-- Message. Default to the left -->
+                        <div ng-repeat="messege in messeges" ng-class="{'direct-chat-msg' : true, 'right' : messege.ownMsg}">
+                          <div class='direct-chat-info clearfix'>
+                            <span class='direct-chat-name pull-left'>{{ messege.username }}</span>
+                            <span class='direct-chat-timestamp pull-right'>23 Jan 5:37 pm</span>
+                          </div><!-- /.direct-chat-info -->
+                          <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image" /><!-- /.direct-chat-img -->
+                          <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
+                            {{ messege.msg }}
+                           <div class="item">
+                              <div class="attachment clearfix">
+                                <!-- <h4>Attachments:</h4> -->
+                                <h4></h4>
+                                <p class="filename">
+                                  <img ng-src="app/css/dist/img/{{messege.userAvatar}}">
+                                </p>
+                                <!-- <div class="pull-right">
+                                  <button class="btn btn-primary btn-sm btn-flat">Open</button>
+                                </div> -->
+                              </div><!-- /.attachment -->
+                          </div><!-- /.item-->
                           </div><!-- /.direct-chat-text -->
                         </div><!-- /.direct-chat-msg -->
-
-                        <!-- Message to the right -->
-                        <div class="direct-chat-msg right">
-                          <div class='direct-chat-info clearfix'>
-                            <span class='direct-chat-name pull-right'>Sarah Bullock</span>
-                            <span class='direct-chat-timestamp pull-left'>23 Jan 6:10 pm</span>
-                          </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="app/css/dist/img/user3-128x128.jpg" alt="message user image" /><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text clearfix">
-                            
-                            <div class="item clearfix">
-                              
-                              <div class="attachment pull-right">
-                                <!-- <h4>Attachments:</h4> -->
-                                <p class="pull-right">I would love to.</p>
-                                <h4></h4>
-                                <p class="filename pull-right">
-                                  <img src="app/css/dist/img/user3-128x128.jpg">
-                                </p>
-                                <!-- <div class="pull-right">
-                                  <button class="btn btn-primary btn-sm btn-flat">Open</button>
-                                </div> -->
-                              </div><!-- /.attachment -->
-                            </div><!-- /.item-->
-                          </div><!-- /.direct-chat-text -->
-                        </div><!-- /.direct-chat-msg -->
-                        <!-- Message to the right -->
-                        <div class="direct-chat-msg right">
-                          <div class='direct-chat-info clearfix'>
-                            <span class='direct-chat-name pull-right'>Sarah Bullock</span>
-                            <span class='direct-chat-timestamp pull-left'>23 Jan 6:10 pm</span>
-                          </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="app/css/dist/img/user3-128x128.jpg" alt="message user image" /><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text clearfix">
-                            
-                            <div class="item clearfix">
-                              
-                              <div class="attachment pull-right">
-                                <!-- <h4>Attachments:</h4> -->
-                                <p class="pull-right">I would love to.</p>
-                                <h4></h4>
-                                <p class="filename pull-right">
-                                  <img src="app/css/dist/img/user3-128x128.jpg">
-                                </p>
-                                <!-- <div class="pull-right">
-                                  <button class="btn btn-primary btn-sm btn-flat">Open</button>
-                                </div> -->
-                              </div><!-- /.attachment -->
-                            </div><!-- /.item-->
-                          </div><!-- /.direct-chat-text -->
-                        </div><!-- /.direct-chat-msg -->
-
-                        <!-- Message to the right -->
-                        <div class="direct-chat-msg right">
-                          <div class='direct-chat-info clearfix'>
-                            <span class='direct-chat-name pull-right'>Sarah Bullock</span>
-                            <span class='direct-chat-timestamp pull-left'>23 Jan 6:10 pm</span>
-                          </div><!-- /.direct-chat-info -->
-                          <img class="direct-chat-img" src="app/css/dist/img/user3-128x128.jpg" alt="message user image" /><!-- /.direct-chat-img -->
-                          <div class="direct-chat-text clearfix">
-                            
-                            <div class="item clearfix">
-                              
-                              <div class="attachment pull-right">
-                                <!-- <h4>Attachments:</h4> -->
-                                <p class="pull-right">I would love to.</p>
-                                <h4></h4>
-                                <p class="filename pull-right">
-                                  <img src="app/css/dist/img/user3-128x128.jpg">
-                                </p>
-                                <!-- <div class="pull-right">
-                                  <button class="btn btn-primary btn-sm btn-flat">Open</button>
-                                </div> -->
-                              </div><!-- /.attachment -->
-                            </div><!-- /.item-->
-                          </div><!-- /.direct-chat-text -->
-                        </div><!-- /.direct-chat-msg -->                    
-
 
 
                       </div><!--/.direct-chat-messages-->
@@ -176,15 +120,14 @@
                       <!-- Contacts are loaded here -->
                       <div class="direct-chat-contacts">
                         <ul class='contacts-list'>
-                          <li>
+                          <li ng-repeat="user in users">
                             <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user1-128x128.jpg'/>
+                              <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
                               <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Count Dracula
-                                  <small class='contacts-list-date pull-right'>2/28/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>How have you been? I was...</span>
+                                <!-- <span class='contacts-list-name'> -->
+                                  <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
+                                  
+                                <!-- </span> -->
                               </div><!-- /.contacts-list-info -->
                             </a>
                           </li><!-- End Contact Item -->
@@ -197,54 +140,6 @@
                                   <small class='contacts-list-date pull-right'>2/23/2015</small>
                                 </span>
                                 <span class='contacts-list-msg'>I will be waiting for...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user3-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Nadia Jolie
-                                  <small class='contacts-list-date pull-right'>2/20/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>I'll call you back at...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user5-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Nora S. Vans
-                                  <small class='contacts-list-date pull-right'>2/10/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>Where is your new...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user6-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  John K.
-                                  <small class='contacts-list-date pull-right'>1/27/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>Can I take a look at...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user8-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Kenneth M.
-                                  <small class='contacts-list-date pull-right'>1/4/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>Never mind I found...</span>
                               </div><!-- /.contacts-list-info -->
                             </a>
                           </li><!-- End Contact Item -->
@@ -277,19 +172,18 @@
                       <!-- Conversations are loaded here -->
                       <div class="direct-chat-messages ol-members">
                         <ul class='contacts-list'>
-                          <li>
+                          <li ng-repeat="user in users" ng-show="moreUsers">
                             <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user1-128x128.jpg'/>
+                              <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
                               <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Count Dracula
-                                  <small class='contacts-list-date pull-right'>2/28/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>How have you been? I was...</span>
+                                <!-- <span class='contacts-list-name'> -->
+                                  <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
+                                  
+                                <!-- </span> -->
                               </div><!-- /.contacts-list-info -->
                             </a>
                           </li><!-- End Contact Item -->
-                          <li>
+                          <li ng-show="!moreUsers">
                             <a href='#'>
                               <img class='contacts-list-img' src='app/css/dist/img/user7-128x128.jpg'/>
                               <div class='contacts-list-info'>
@@ -298,54 +192,6 @@
                                   <small class='contacts-list-date pull-right'>2/23/2015</small>
                                 </span>
                                 <span class='contacts-list-msg'>I will be waiting for...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user3-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Nadia Jolie
-                                  <small class='contacts-list-date pull-right'>2/20/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>I'll call you back at...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user5-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Nora S. Vans
-                                  <small class='contacts-list-date pull-right'>2/10/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>Where is your new...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user6-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  John K.
-                                  <small class='contacts-list-date pull-right'>1/27/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>Can I take a look at...</span>
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                          <li>
-                            <a href='#'>
-                              <img class='contacts-list-img' src='app/css/dist/img/user8-128x128.jpg'/>
-                              <div class='contacts-list-info'>
-                                <span class='contacts-list-name'>
-                                  Kenneth M.
-                                  <small class='contacts-list-date pull-right'>1/4/2015</small>
-                                </span>
-                                <span class='contacts-list-msg'>Never mind I found...</span>
                               </div><!-- /.contacts-list-info -->
                             </a>
                           </li><!-- End Contact Item -->

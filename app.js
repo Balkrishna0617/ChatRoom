@@ -22,7 +22,7 @@ ios.on('connection', function(socket){
 
 	socket.on('new user', function(data, callback){
 		console.log("data : ", data);
-		
+		callback({success : true});
 		// console.log("nickname : ", nickname);
 		// if(nickname[data])
 		// {
