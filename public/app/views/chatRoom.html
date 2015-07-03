@@ -16,29 +16,29 @@
                     </div><!-- /.box-header -->
                     <div class="box-body">
                       <!-- Conversations are loaded here -->
-                      <div class="direct-chat-messages">               
+                      <div class="direct-chat-messages" schroll-bottom="messeges">               
 
                         <!-- Message. Default to the left -->
-                        <div ng-repeat="messege in messeges" ng-class="{'direct-chat-msg' : true, 'right' : messege.ownMsg}">
+                        <div ng-repeat="messege in messeges" ng-class="{'direct-chat-msg' : true, 'right' : messege.ownMsg, 'clearfix' : true}" >
                           <div class='direct-chat-info clearfix'>
                             <span class='direct-chat-name pull-left'>{{ messege.username }}</span>
-                            <span class='direct-chat-timestamp pull-right'>23 Jan 5:37 pm</span>
+                            <span class='direct-chat-timestamp pull-right'>{{ messege.msgTime }}</span>
                           </div><!-- /.direct-chat-info -->
                           <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image" /><!-- /.direct-chat-img -->
                           <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
                             {{ messege.msg }}
-                           <div class="item">
-                              <div class="attachment clearfix">
+                           <!-- <div class="item">
+                              <div class="attachment clearfix"> -->
                                 <!-- <h4>Attachments:</h4> -->
-                                <h4></h4>
+                               <!--  <h4></h4>
                                 <p class="filename">
                                   <img ng-src="app/css/dist/img/{{messege.userAvatar}}">
-                                </p>
+                                </p> -->
                                 <!-- <div class="pull-right">
                                   <button class="btn btn-primary btn-sm btn-flat">Open</button>
                                 </div> -->
-                              </div><!-- /.attachment -->
-                          </div><!-- /.item-->
+                              <!-- </div> --><!-- /.attachment -->
+                          <!-- </div> --><!-- /.item-->
                           </div><!-- /.direct-chat-text -->
                         </div><!-- /.direct-chat-msg -->
 
@@ -71,7 +71,7 @@
                       </div>
                       <form action="#" method="post">
                         <div class="input-group">
-                          <input type="text" name="message" placeholder="Type Message ..." class="form-control" ng-model="chatMsg"/>
+                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()"/>
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
                           </span>

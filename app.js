@@ -6,77 +6,66 @@ var io = require('socket.io');
 var ios = io.listen(server);
 var nickname = [];
 var i = [];
+var x = [];
+var online_member = [];
+var temp1;
 var socket_id;
+var socket_data;
 
 server.listen(3000);
 
-// app.get('/', function(req, res) {
-// 	res.sendfile('index.html');
-// });
-
 app.use(express.static(__dirname + '/public'));
-ios.on('connection', function(socket){
-	// socket.on('send-message', function(data){
-	// 	ios.sockets.emit('new message', data);
-	// });
+
+ios.on('connection', function(socket){	
 
 	socket.on('new user', function(data, callback){
-		console.log("data : ", data);
-		
 		if(nickname[data.username])
-		{
-			callback({success:false});
-		}
-		else{
-			callback({success:true});
-			// socket.set('avtar', data.avtar);
-			nickname[data.username] = socket;
-		    // i = Object.keys(nickname);
-		    // console.log("socket key:", i);
-		    //console.log("Updated socket:",socket);
-   			// ios.sockets.emit('user-list', i);
-		}
+			{
+				callback({success:false});
+			}else{
+				callback({success:true});
+				socket.username = data.username;
+				socket.userAvatar = data.userAvatar;
+				nickname[data.username] = socket;
+			}
+	});
 
-		// callback({success:true});
-		// console.log("nickname : ", nickname);
-		// if(nickname[data])
-		// {
-		// 	callback(false);
-		// }
-		// else{
-		// 	callback(true);
-		// 	nickname[data] = socket;
-		//     i = Object.keys(nickname);
-		//     console.log("socket key:", i);
-  //  			ios.sockets.emit('user-list', i);
-		// }
-		/*console.log("nickname : ", nickname);
-	    i = Object.keys(nickname);
-		console.log("userlist:"+i);
-		for(var j = 0; j<i.length; j++)
+	socket.on('get-online-members', function(data){
+		var online_member = [];
+		i = Object.keys(nickname);
+		for(var j=0;j<i.length;j++ )
 		{
-			ios.sockets.emit('user-list', i[j]);
-		}*/
+			socket_id = i[j];
+			socket_data = nickname[socket_id];
+			temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
+			online_member.push(temp1);
+		}
+		ios.sockets.emit('online-members', online_member);		
+	});
 
+	socket.on('send-message', function(data, callback){
+		if(data.msg){
+			ios.sockets.emit('new message', data);
+			callback({success:true});	
+		}else{
+			callback({ success:false});
+		}
+		
 	});
  
-  // socket.on('disconnect', function () {
+	socket.on('disconnect', function () {	
+		console.log('one client disconnected');
 
-  //     //socket.emit('disconnected');
-  //     console.log('one client disconnected');
-  //     delete socket.namespace.sockets[socket.id];
-	 //  //var k  = nickname.indexOf(socket);
-	 //  //console.log("disconnected socket:",k);
-	 //  //delete nickname[k];
-	 //  i = Object.keys(nickname);
-	 //  console.log("socket key after disconnect:", i);
-	  
-  // });
-  // socket.on('DelPlayer', function (data) {
-		// //delete nickname[data];
-		// console.log("DelPlayer event fired");
-		// console.log(data,":DELETED");
-		// console.log(nickname,":NICKNAME")
-  // });
+		delete nickname[socket.username];
+		online_member = [];
+		x = Object.keys(nickname);
+		for(var k=0;k<x.length;k++ )
+    	{
+        	socket_id = x[k];
+        	socket_data = nickname[socket_id];
+        	temp1 = {"username": socket_data.username, "userAvatar":socket_data.userAvatar};
+            online_member.push(temp1);
+    	}
+		ios.sockets.emit('online-members', online_member);            	
+   	});
 });
-

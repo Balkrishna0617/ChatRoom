@@ -5,14 +5,14 @@ angular.module('Controllers',[])
 	$scope.isErrorReq = false;
 	$scope.isErrorNick = false;
 	$scope.username = "";
+	// $rootScope.loggedIn = false;
 	// $rootScope.username = "";
 	// $localStorage.loggedIn = false;
 
 	// redirection if user logged in.
-	// if($localStorage.loggedIn){
-	// 	$location.path('/ChatRoom');
-	// }
-
+	if($rootScope.loggedIn){
+		$location.path('/ChatRoom');
+	}
 
 	// Functions for controlling behaviour.
 	$scope.redirect = function(){
@@ -24,6 +24,7 @@ angular.module('Controllers',[])
 				if(data.success == true){
 					$rootScope.username = $scope.username;
 					$rootScope.userAvatar = $scope.userAvatar;
+					$rootScope.loggedIn = true;
 					$location.path('/ChatRoom');					
 				}else{
 					$scope.isErrorNick = true;
