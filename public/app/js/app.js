@@ -1,4 +1,4 @@
-var App = angular.module('ChatRoom',['ngResource','ngRoute','ngStorage','socket.io','Controllers'])
+var App = angular.module('ChatRoom',['ngResource','ngRoute','ngStorage','socket.io','ngFileUpload','Controllers'])
 .run(["$rootScope", function ($rootScope){
 	$rootScope.baseUrl = 'http://192.168.2.135:3000';
 }]);

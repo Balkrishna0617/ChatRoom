@@ -27,18 +27,18 @@
                           <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image" /><!-- /.direct-chat-img -->
                           <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
                             {{ messege.msg }}
-                           <!-- <div class="item">
-                              <div class="attachment clearfix"> -->
-                                <!-- <h4>Attachments:</h4> -->
-                               <!--  <h4></h4>
-                                <p class="filename">
-                                  <img ng-src="app/css/dist/img/{{messege.userAvatar}}">
-                                </p> -->
-                                <!-- <div class="pull-right">
-                                  <button class="btn btn-primary btn-sm btn-flat">Open</button>
-                                </div> -->
-                              <!-- </div> --><!-- /.attachment -->
-                          <!-- </div> --><!-- /.item-->
+                            <!-- {{ messege.sendfile }} -->
+                            <div class="item">
+                                <div class="attachment clearfix">
+                                <p></p>
+                                  <p class="filename">
+                                    <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}">
+                                  </p>
+                                  <!-- <div class="pull-right">
+                                    <button class="btn btn-primary btn-sm btn-flat">Open</button>
+                                  </div> -->
+                                </div><!-- /.attachment -->
+                            </div><!-- /.item-->
                           </div><!-- /.direct-chat-text -->
                         </div><!-- /.direct-chat-msg -->
 
@@ -65,13 +65,14 @@
                     </div><!-- /.box-body -->
                     <div class="box-footer">
                       <div class="box-tools pull-right">
-                        <button class="btn btn-warning btn-flat" data-widget=""><i class="fa fa-photo"></i></button>
+                        <!-- <input type="file" id="image"/> -->
+                        <button class="btn btn-warning btn-flat" data-widget="" ngf-select ng-model="files"><i class="fa fa-photo"></i></button>
                         <button class="btn btn-warning btn-flat" data-toggle="" title="" data-widget=""><i class="fa fa-film"></i></button>
                         <button class="btn btn-warning btn-flat" data-widget=""><i class="fa fa-file-word-o"></i></button>
                       </div>
                       <form action="#" method="post">
                         <div class="input-group">
-                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()"/>
+                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus"/>
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
                           </span>
