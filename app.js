@@ -12,7 +12,15 @@ var temp1;
 var socket_id;
 var socket_data;
 
-server.listen(3000);
+var port = 3000;
+server.listen(port,function(err){
+	 if(!err){
+	 	console.log("ChatRoom Server is running on IP : 158.69.96.25:3000");
+	 }else{
+	    console.log(err);
+	 }
+});
+
 
 app.use(express.static(__dirname + '/public'));
 app.use(function(req, res, next) {														// CORS Issue Fix

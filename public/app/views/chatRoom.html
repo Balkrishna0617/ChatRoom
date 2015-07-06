@@ -26,9 +26,9 @@
                           </div><!-- /.direct-chat-info -->
                           <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image" /><!-- /.direct-chat-img -->
                           <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
-                            {{ messege.msg }}
+                            <div ng-hide="hasFile">{{ messege.msg }}</div>
                             <!-- {{ messege.sendfile }} -->
-                            <div class="item">
+                            <div class="item" ng-show="messege.hasFile">
                                 <div class="attachment clearfix">
                                 <p></p>
                                   <p class="filename">

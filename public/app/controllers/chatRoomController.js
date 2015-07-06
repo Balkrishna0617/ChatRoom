@@ -101,7 +101,8 @@ angular.module('Controllers')
 		}
 		// data.msg = "Image upload code";
 		$scope.messeges.push(data);
-		// console.log("file inside : ",data.sendfile);
+
+		console.log("file inside : ",data.hasFile);
 	});
 
 	$scope.sendMsg = function(){
