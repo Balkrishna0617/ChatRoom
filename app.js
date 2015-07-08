@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var http = require('http');
+var bodyParser = require('body-parser');
 var server = http.createServer(app);
 var io = require('socket.io');
 var ios = io.listen(server);
@@ -12,16 +13,10 @@ var temp1;
 var socket_id;
 var socket_data;
 
-var port = 3000;
-server.listen(port,function(err){
-	 if(!err){
-	 	console.log("ChatRoom Server is running on IP : 158.69.96.25:3000");
-	 }else{
-	    console.log(err);
-	 }
-});
+server.listen(3000,'192.168.2.135');
 
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(__dirname + '/public'));
 app.use(function(req, res, next) {														// CORS Issue Fix
   res.header("Access-Control-Allow-Origin", "*");
@@ -101,6 +96,13 @@ ios.on('connection', function(socket){
    	});
 });
 
+app.post('/uploadImage',function (req, res){
+	// console.log("Im called uploadImage.");
+	// console.log("req.body : ", req.body);
+	console.log("file-name : ", req.body.filename);
+	console.log("file-type : ", req.body.filetype);
+	console.log("file-content : ", req.body.filecontent);
+});
 
 function base64ArrayBuffer(arrayBuffer) {
   var base64    = ''
