@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var http = require('http');
 var bodyParser = require('body-parser');
+var fs = require('fs');
+var multer = require('multer');
 var server = http.createServer(app);
 var io = require('socket.io');
 var ios = io.listen(server);
@@ -16,7 +18,9 @@ var socket_data;
 server.listen(3000,'192.168.2.135');
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+        extended: true
+    }));
 app.use(express.static(__dirname + '/public'));
 app.use(function(req, res, next) {														// CORS Issue Fix
   res.header("Access-Control-Allow-Origin", "*");
@@ -57,9 +61,14 @@ ios.on('connection', function(socket){
 			callback({success:true});	
 		}else if(data.hasFile){
 			if(data.istype == "image"){
-				var base64file = base64ArrayBuffer(data.sendfile);
-				data.sendfile = base64file;
+				console.log("recieved file");
+				data.sendfile = "";
 				ios.sockets.emit('new message image', data);
+				// var base64file = base64ArrayBuffer(data.sendfile);
+				// console.log("sending file");
+				// data.sendfile = base64file;
+
+				
 				callback({success:true});
 			} else if(data.istype == "music"){
 				ios.sockets.emit('new message music', data);
@@ -97,11 +106,28 @@ ios.on('connection', function(socket){
 });
 
 app.post('/uploadImage',function (req, res){
+	// console.log(req.body);
+	var filename = Date.now() + req.body.filename;
+	var filecontent = req.body.filecontent;
+	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
+	console.log(filecontent);
+	fs.writeFile("./public/app/upload/images/"+filename, filecontent, function(){
+		console.log("done writting");
+	});
+	res.send({"success" : "res from server"});
+
 	// console.log("Im called uploadImage.");
-	// console.log("req.body : ", req.body);
-	console.log("file-name : ", req.body.filename);
-	console.log("file-type : ", req.body.filetype);
-	console.log("file-content : ", req.body.filecontent);
+	// console.log("req.body : ", req.files);
+	// fs.writeSync("./public/app/upload/"+req.body.filename, req.body.filecontent, function(){
+	// 	console.log("done writting");
+	// } )
+	// console.log("req.file : ", req.files);
+	// console.log("file-name : ", req.body.filename);
+	// console.log("file-type : ", req.body.filetype);
+	// console.log("file-content : ", req.body.filecontent.data);
+	// var abc = base64ArrayBuffer(req.body.filecontent);
+	// console.log(abc);
+	
 });
 
 function base64ArrayBuffer(arrayBuffer) {

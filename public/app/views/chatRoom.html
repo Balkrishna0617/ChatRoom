@@ -65,10 +65,17 @@
                     </div><!-- /.box-body -->
                     <div class="box-footer">
                       <div class="box-tools pull-right">
-                        <!-- <input type="file" id="image"/> -->
-                        <button class="btn btn-warning btn-flat" data-widget="" ngf-select ng-model="files"><i class="fa fa-photo"></i></button>
-                        <button class="btn btn-warning btn-flat" data-toggle="" title="" data-widget=""><i class="fa fa-film"></i></button>
-                        <button class="btn btn-warning btn-flat" data-widget=""><i class="fa fa-file-word-o"></i></button>
+                        <!-- image select angularjs -->
+                        <button class="btn btn-warning btn-flat" id="imgFiles" data-widget="" ngf-select ng-model="imageFiles" ngf-accept="'image/*'"><i class="fa fa-photo"></i></button>
+                        <!-- <form style="display: inline-block;" name="ImageForm" method="post" action="/uploadImage" enctype="multipart/form-data"> -->
+                                  <!-- image select javascript -->
+                                  <!-- <button class="btn btn-warning btn-flat" data-widget="" onclick="$('#inputImage').click()"><i class="fa fa-photo"></i></button> -->
+                                  <!-- <input id="inputImage" type="file" name="file" class="" data-widget="" onchange="angular.element(this).scope().inputImageFile(this.files)" -->
+                        <!-- </form> -->
+                        <!-- music file select angularjs -->
+                        <button class="btn btn-warning btn-flat" data-toggle="" title="" ngf-select ng-model="musicFiles" ngf-accept="'audio/*'"><i class="fa fa-headphones"></i></button>
+                        <!-- doc file select angularjs -->
+                        <button class="btn btn-warning btn-flat" data-widget="" ngf-select ng-model="docFiles" ngf-accept="'application/pdf'"><i class="fa fa-file-word-o"></i></button>
                       </div>
                       <form action="#" method="post">
                         <div class="input-group">
