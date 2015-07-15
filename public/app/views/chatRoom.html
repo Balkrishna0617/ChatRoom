@@ -8,15 +8,17 @@
           <section class="content">
                                 
                 <div class="row">
-                  <div class="col-md-9">
+                  <div class="col-sm-9">
                     <div class="box box-warning direct-chat direct-chat-warning">
                     <div class="box-header with-border">
                       <h3 class="box-title">Chat Room</h3>
-                      
+                      <div class="box-tools pull-right">
+                        <button class="btn btn-box-tool" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
+                      </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
                       <!-- Conversations are loaded here -->
-                      <div class="direct-chat-messages" schroll-bottom="messeges">               
+                      <div class="direct-chat-messages" schroll-bottom="messeges" ng-show="custom">               
 
                         <!-- Message. Default to the left -->
                         <div ng-repeat="messege in messeges" ng-class="{'direct-chat-msg' : true, 'right' : messege.ownMsg, 'clearfix' : true}" >
@@ -30,9 +32,35 @@
                             <!-- {{ messege.sendfile }} -->
                             <div class="item" ng-show="messege.hasFile">
                                 <div class="attachment clearfix">
-                                <p></p>
-                                  <p class="filename">
-                                    <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}">
+                                <!-- Image File Open -->
+                                  <p ng-class="{'filename' : true,'chat-msg' : true}" ng-show="messege.isImageFile">
+                                    
+                                    <a href ng-click="openClickImage(messege)" ng-show="messege.showme" >
+                                    <img id="{{messege.dwid}}" width="60" height="60" ng-src="{{messege.dwimgsrc}}" alt="Open Image">
+                                    <br/><small ng-show="!messege.ownMsg">Size : {{messege.size}}</small>
+                                    </a><!-- Open Icon -->
+                                    
+                                    <a ng-href="{{messege.imgsrc}}" data-lightbox="image-1" data-title="My caption" ng-hide="messege.showme">
+                                      <img id="{{messege.dwid+1}}" width="150" height="100" ng-src="{{messege.imgsrc}}" alt="Image File"> <!-- Image -->
+                                    <!-- <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}" alt="Image File"> -->
+                                    </a>
+                                  </p> <!-- Image File Close -->
+
+
+                                  <!-- Audio File Open -->
+                                  <p ng-class="{'filename' : true, 'chat-msg' : true}" ng-show="messege.isMusicFile">
+                                    <a href ng-click="openClickMusic(messege)">
+                                      <img style="margin-left : 10px" id="{{messege.dwid}}" width="35" height="35" ng-src="{{messege.dwimgsrc}}" alt="Music Files">
+                                      <br/><small ng-show="messege.showme">Size : {{messege.size}}</small>
+                                    </a>
+                                    <!-- <audio controls> -->
+                                      <!-- <source src="horse.ogg" type="audio/ogg"> -->
+                                    <!--   <source src="" type="audio/mp3">
+                                    Your browser does not support the audio element.
+                                    </audio> -->
+                                  </p><!-- Audio File Close -->
+                                  <p ng-class="{'filename' : true}" ng-show="messege.isDocFile">
+                                    <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}" alt="Document">
                                   </p>
                                   <!-- <div class="pull-right">
                                     <button class="btn btn-primary btn-sm btn-flat">Open</button>
@@ -46,22 +74,25 @@
                       </div><!--/.direct-chat-messages-->
 
 
-                      <!-- Contacts are loaded here -->
-                      <div class="direct-chat-contacts">
-                        <ul class='contacts-list'>
-                          <li ng-repeat="user in users">
-                            <a href='#'>
-                              <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
-                              <div class='contacts-list-info'>
-                                <!-- <span class='contacts-list-name'> -->
-                                  <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
-                                  
-                                <!-- </span> -->
-                              </div><!-- /.contacts-list-info -->
-                            </a>
-                          </li><!-- End Contact Item -->
-                        </ul><!-- /.contatcts-list -->
-                      </div><!-- /.direct-chat-pane -->
+                      <!-- Conversations are loaded here -->
+                      
+                        <div class="wrap" ng-hide="custom">
+                        <div class="direct-chat-messages ol-members" id="slidememberlist">
+                          <ul class='contacts-list'>
+                            <li ng-repeat="user in users">
+                              <a href='#'>
+                                <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
+                                <div class='contacts-list-info'>
+                                  <!-- <span class='contacts-list-name'> -->
+                                    <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
+                                    
+                                  <!-- </span> -->
+                                </div><!-- /.contacts-list-info -->
+                              </a>
+                            </li><!-- End Contact Item -->
+                          </ul><!-- /.contatcts-list -->
+                        </div><!--/.direct-chat-messages-->
+                      </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer">
                       <div class="box-tools pull-right">
@@ -79,7 +110,7 @@
                       </div>
                       <form action="#" method="post">
                         <div class="input-group">
-                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus"/>
+                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="true"/>
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
                           </span>
@@ -88,7 +119,8 @@
                     </div><!-- /.box-footer-->
                     </div><!-- /.box -->
                   </div>
-                  <div class="col-md-3">
+                  
+                  <div class="col-sm-3">
                     <div class="box box-warning direct-chat direct-chat-warning">  
                     <div class="box-header with-border">
                       <h3 class="box-title">Online Members</h3>
@@ -117,7 +149,7 @@
                   </div><!-- /.box -->
                 </div>
                       
-            
+            </div>
           </section><!-- /.content -->
         </div><!-- /.container -->
       </div><!-- /.content-wrapper -->
@@ -130,3 +162,5 @@
         <!-- </div>/.container -->
       <!-- </footer> -->
    <!--  </div>./wrapper -->
+
+

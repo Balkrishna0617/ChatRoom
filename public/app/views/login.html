@@ -10,7 +10,7 @@
 	    	<!-- <label ng-hide="!isError" class="control-label" for="inputError"><i class="fa fa-times-circle-o"></i> {{ errMsg }}</label> -->
 	    	</div>
 	      <div ng-class="{'form-group':true, 'has-feedback':true, 'has-error':isErrorReq}">	      	
-	        <input type="text" class="form-control" placeholder="nickname" ng-model="username" ng-change="isErrorReq=isErrorNick=false"/>
+	        <input type="text" class="form-control" placeholder="nickname" ng-model="username" ng-change="isErrorReq=isErrorNick=false" focus-me="true"/>
 	        <span ng-hide="isErrorNick"class="glyphicon glyphicon-user form-control-feedback"></span>
 	        <span ng-hide="!isErrorNick" class="glyphicon glyphicon-remove form-control-feedback errText"></span>
 	      </div>

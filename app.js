@@ -17,11 +17,20 @@ var socket_data;
 
 server.listen(3000,'192.168.2.135');
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ 
+    limit: 1024 * 10000
+}));
+app.use(bodyParser.text({ 
+    limit: 1024 * 10000
+}));
+app.use(bodyParser.raw({ 
+    limit: 1024 * 10000
+}));
 app.use(bodyParser.urlencoded({
         extended: true
-    }));
+}));
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public/app/upload/music'));
 app.use(function(req, res, next) {														// CORS Issue Fix
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -61,9 +70,9 @@ ios.on('connection', function(socket){
 			callback({success:true});	
 		}else if(data.hasFile){
 			if(data.istype == "image"){
-				console.log("recieved file");
-				data.sendfile = "";
-				ios.sockets.emit('new message image', data);
+				// console.log("recieved file");
+				// data.sendfile = "";
+				socket.emit('new message image', data);
 				// var base64file = base64ArrayBuffer(data.sendfile);
 				// console.log("sending file");
 				// data.sendfile = base64file;
@@ -71,7 +80,7 @@ ios.on('connection', function(socket){
 				
 				callback({success:true});
 			} else if(data.istype == "music"){
-				ios.sockets.emit('new message music', data);
+				socket.emit('new message music', data);
 				callback({success:true});
 			} else if(data.istype == "textfile"){
 				ios.sockets.emit('new message textfile', data);
@@ -107,77 +116,126 @@ ios.on('connection', function(socket){
 
 app.post('/uploadImage',function (req, res){
 	// console.log(req.body);
+	var userName = req.body.username;
+	var useravatar = req.body.userAvatar;
+	var hasfile = req.body.hasFile;
+	var isimagefile = req.body.isImageFile;
+	var isType = req.body.istype;
+	var showMe = req.body.dwimgsrc;
+	var DWimgsrc = req.body.dwimgsrc;
+	var DWid = req.body.dwid;
+	var msgtime = req.body.msgTime;
 	var filename = Date.now() + req.body.filename;
 	var filecontent = req.body.filecontent;
 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
-	console.log(filecontent);
-	fs.writeFile("./public/app/upload/images/"+filename, filecontent, function(){
-		console.log("done writting");
-	});
-	res.send({"success" : "res from server"});
-
-	// console.log("Im called uploadImage.");
-	// console.log("req.body : ", req.files);
-	// fs.writeSync("./public/app/upload/"+req.body.filename, req.body.filecontent, function(){
-	// 	console.log("done writting");
-	// } )
-	// console.log("req.file : ", req.files);
-	// console.log("file-name : ", req.body.filename);
-	// console.log("file-type : ", req.body.filetype);
-	// console.log("file-content : ", req.body.filecontent.data);
-	// var abc = base64ArrayBuffer(req.body.filecontent);
-	// console.log(abc);
+	// console.log(filecontent);
 	
+	fs.writeFile("./public/app/upload/images/"+filename, filecontent, function(){
+		var data = { 
+			username : userName, 
+			userAvatar : useravatar, 
+			repeatMsg : true, 
+			hasFile : hasfile, 
+			isImageFile : isimagefile, 
+			istype : isType, 
+			showme : showMe, 
+			dwimgsrc : DWimgsrc, 
+			dwid : DWid, 
+			msgTime : msgtime, 
+			usrimg : "app/images/demo.jpg",
+			size : '579kbs'
+		};
+	ios.sockets.emit('new message image', data);
+	console.log("done writting");
+	res.send({"success" : "res from server"});
+	});
 });
+// ios.sockets.emit('new message music', data);
 
-function base64ArrayBuffer(arrayBuffer) {
-  var base64    = ''
-  var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+app.post('/uploadAudio',function (req, res){
+	var userName = req.body.username;
+	var useravatar = req.body.userAvatar;
+	var hasfile = req.body.hasFile;
+	var ismusicfile = req.body.isMusicFile;
+	var isType = req.body.istype;
+	var showMe = req.body.showme;
+	var DWimgsrc = req.body.dwimgsrc;
+	var DWid = req.body.dwid;
+	var msgtime = req.body.msgTime;
+	var filename = Date.now() + req.body.filename;
+	var filecontent = req.body.filecontent;
+	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
+	// console.log(filecontent);
+	
+	fs.writeFile("./public/app/upload/music/"+filename, filecontent, function(){
+		console.log("dwimgsrc", DWimgsrc);
+		var data = { 
+			username : userName, 
+			userAvatar : useravatar, 
+			repeatMsg : true, 
+			hasFile : hasfile, 
+			isMusicFile : ismusicfile, 
+			istype : isType, 
+			showme : true, 
+			dwimgsrc : "app/images/music_icon.png", 
+			dwid : DWid,
+			musicFileName : "abcd2.mp3", 
+			msgTime : msgtime,
+			size : '5.79kb'
+		};
+	ios.sockets.emit('new message music', data);
+	console.log("done writting");
+	res.send({"success" : "res from server"});
+	});
+});
+// function base64ArrayBuffer(arrayBuffer) {
+//   var base64    = ''
+//   var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
  
-  var bytes         = new Uint8Array(arrayBuffer)
-  var byteLength    = bytes.byteLength
-  var byteRemainder = byteLength % 3
-  var mainLength    = byteLength - byteRemainder
+//   var bytes         = new Uint8Array(arrayBuffer)
+//   var byteLength    = bytes.byteLength
+//   var byteRemainder = byteLength % 3
+//   var mainLength    = byteLength - byteRemainder
  
-  var a, b, c, d
-  var chunk
+//   var a, b, c, d
+//   var chunk
  
-  // Main loop deals with bytes in chunks of 3
-  for (var i = 0; i < mainLength; i = i + 3) {
-    // Combine the three bytes into a single integer
-    chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
+//   // Main loop deals with bytes in chunks of 3
+//   for (var i = 0; i < mainLength; i = i + 3) {
+//     // Combine the three bytes into a single integer
+//     chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
  
-    // Use bitmasks to extract 6-bit segments from the triplet
-    a = (chunk & 16515072) >> 18 // 16515072 = (2^6 - 1) << 18
-    b = (chunk & 258048)   >> 12 // 258048   = (2^6 - 1) << 12
-    c = (chunk & 4032)     >>  6 // 4032     = (2^6 - 1) << 6
-    d = chunk & 63               // 63       = 2^6 - 1
+//     // Use bitmasks to extract 6-bit segments from the triplet
+//     a = (chunk & 16515072) >> 18 // 16515072 = (2^6 - 1) << 18
+//     b = (chunk & 258048)   >> 12 // 258048   = (2^6 - 1) << 12
+//     c = (chunk & 4032)     >>  6 // 4032     = (2^6 - 1) << 6
+//     d = chunk & 63               // 63       = 2^6 - 1
  
-    // Convert the raw binary segments to the appropriate ASCII encoding
-    base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d]
-  }
+//     // Convert the raw binary segments to the appropriate ASCII encoding
+//     base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d]
+//   }
  
-  // Deal with the remaining bytes and padding
-  if (byteRemainder == 1) {
-    chunk = bytes[mainLength]
+//   // Deal with the remaining bytes and padding
+//   if (byteRemainder == 1) {
+//     chunk = bytes[mainLength]
  
-    a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2
+//     a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2
  
-    // Set the 4 least significant bits to zero
-    b = (chunk & 3)   << 4 // 3   = 2^2 - 1
+//     // Set the 4 least significant bits to zero
+//     b = (chunk & 3)   << 4 // 3   = 2^2 - 1
  
-    base64 += encodings[a] + encodings[b] + '=='
-  } else if (byteRemainder == 2) {
-    chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1]
+//     base64 += encodings[a] + encodings[b] + '=='
+//   } else if (byteRemainder == 2) {
+//     chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1]
  
-    a = (chunk & 64512) >> 10 // 64512 = (2^6 - 1) << 10
-    b = (chunk & 1008)  >>  4 // 1008  = (2^6 - 1) << 4
+//     a = (chunk & 64512) >> 10 // 64512 = (2^6 - 1) << 10
+//     b = (chunk & 1008)  >>  4 // 1008  = (2^6 - 1) << 4
  
-    // Set the 2 least significant bits to zero
-    c = (chunk & 15)    <<  2 // 15    = 2^4 - 1
+//     // Set the 2 least significant bits to zero
+//     c = (chunk & 15)    <<  2 // 15    = 2^4 - 1
  
-    base64 += encodings[a] + encodings[b] + encodings[c] + '='
-  }
+//     base64 += encodings[a] + encodings[b] + encodings[c] + '='
+//   }
   
-  return base64
-}
+//   return base64
+// }
