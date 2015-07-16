@@ -30,7 +30,9 @@ app.use(bodyParser.urlencoded({
         extended: true
 }));
 app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public/app/upload/images'));
 app.use(express.static(__dirname + '/public/app/upload/music'));
+app.use(express.static(__dirname + '/public/app/upload/doc'));
 app.use(function(req, res, next) {														// CORS Issue Fix
   res.header("Access-Control-Allow-Origin", "*");
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -82,8 +84,8 @@ ios.on('connection', function(socket){
 			} else if(data.istype == "music"){
 				socket.emit('new message music', data);
 				callback({success:true});
-			} else if(data.istype == "textfile"){
-				ios.sockets.emit('new message textfile', data);
+			} else if(data.istype == "PDF"){
+				socket.emit('new message PDF', data);
 				callback({success:true});
 			}
 		}else{
@@ -142,7 +144,8 @@ app.post('/uploadImage',function (req, res){
 			dwimgsrc : DWimgsrc, 
 			dwid : DWid, 
 			msgTime : msgtime, 
-			usrimg : "app/images/demo.jpg",
+			serverimg : "app/images/demo.jpg",
+			filename : req.body.filename,
 			size : '579kbs'
 		};
 	ios.sockets.emit('new message image', data);
@@ -168,7 +171,7 @@ app.post('/uploadAudio',function (req, res){
 	// console.log(filecontent);
 	
 	fs.writeFile("./public/app/upload/music/"+filename, filecontent, function(){
-		console.log("dwimgsrc", DWimgsrc);
+		// console.log("dwimgsrc", DWimgsrc);
 		var data = { 
 			username : userName, 
 			userAvatar : useravatar, 
@@ -177,13 +180,52 @@ app.post('/uploadAudio',function (req, res){
 			isMusicFile : ismusicfile, 
 			istype : isType, 
 			showme : true, 
-			dwimgsrc : "app/images/music_icon.png", 
+			dwimgsrc : DWimgsrc, 
 			dwid : DWid,
 			musicFileName : "abcd2.mp3", 
 			msgTime : msgtime,
+			filename : req.body.filename,
 			size : '5.79kb'
 		};
 	ios.sockets.emit('new message music', data);
+	console.log("done writting");
+	res.send({"success" : "res from server"});
+	});
+});
+
+app.post('/uploadPDF',function (req, res){
+	var userName = req.body.username;
+	var useravatar = req.body.userAvatar;
+	var hasfile = req.body.hasFile;
+	var ispdffile = req.body.isPDFFile;
+	var isType = req.body.istype;
+	var showMe = req.body.showme;
+	var DWimgsrc = req.body.dwimgsrc;
+	var DWid = req.body.dwid;
+	var msgtime = req.body.msgTime;
+	var filename = Date.now() + req.body.filename;
+	var filecontent = req.body.filecontent;
+	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
+	// console.log(filecontent);
+	
+	fs.writeFile("./public/app/upload/doc/"+filename, filecontent, function(){
+		// console.log("dwimgsrc", DWimgsrc);
+		var data = { 
+			username : userName, 
+			userAvatar : useravatar, 
+			repeatMsg : true, 
+			hasFile : hasfile, 
+			isPDFFile : ispdffile, 
+			istype : isType, 
+			showme : true, 
+			dwimgsrc : DWimgsrc, 
+			dwid : DWid,
+			PDFFileName : "grid-computing.pdf", 
+			msgTime : msgtime,
+			filename : req.body.filename,
+			size : '7.79mb'
+		};
+	ios.sockets.emit('new message PDF', data);
 	console.log("done writting");
 	res.send({"success" : "res from server"});
 	});

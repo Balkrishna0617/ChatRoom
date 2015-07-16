@@ -29,19 +29,19 @@
                           <img class="direct-chat-img" ng-src="app/css/dist/img/{{messege.userAvatar}}" alt="message user image" /><!-- /.direct-chat-img -->
                           <div ng-class="{'direct-chat-text' : true, 'text-right' : messege.ownMsg}">
                             <div ng-hide="hasFile">{{ messege.msg }}</div>
-                            <!-- {{ messege.sendfile }} -->
+                            <!-- {{ messege.sendfile }} Media File Messeges -->
                             <div class="item" ng-show="messege.hasFile">
                                 <div class="attachment clearfix">
                                 <!-- Image File Open -->
                                   <p ng-class="{'filename' : true,'chat-msg' : true}" ng-show="messege.isImageFile">
                                     
                                     <a href ng-click="openClickImage(messege)" ng-show="messege.showme" >
-                                    <img id="{{messege.dwid}}" width="60" height="60" ng-src="{{messege.dwimgsrc}}" alt="Open Image">
-                                    <br/><small ng-show="!messege.ownMsg">Size : {{messege.size}}</small>
+                                    <img id="{{messege.dwid}}" width="50" height="50" ng-src="{{messege.dwimgsrc}}" alt="Open Image">
+                                    <br/><small ng-show="!messege.ownMsg">{{ messege.filename}} ({{messege.size}})</small>
                                     </a><!-- Open Icon -->
                                     
                                     <a ng-href="{{messege.imgsrc}}" data-lightbox="image-1" data-title="My caption" ng-hide="messege.showme">
-                                      <img id="{{messege.dwid+1}}" width="150" height="100" ng-src="{{messege.imgsrc}}" alt="Image File"> <!-- Image -->
+                                      <img ng-class="{'multiple-borders-white' : messege.ownMsg,'multiple-borders-black' : !messege.ownMsg}" id="{{messege.dwid+1}}" width="90" height="70" ng-src="{{messege.imgsrc}}" alt="Image File"> <!-- Image -->
                                     <!-- <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}" alt="Image File"> -->
                                     </a>
                                   </p> <!-- Image File Close -->
@@ -50,8 +50,8 @@
                                   <!-- Audio File Open -->
                                   <p ng-class="{'filename' : true, 'chat-msg' : true}" ng-show="messege.isMusicFile">
                                     <a href ng-click="openClickMusic(messege)">
-                                      <img style="margin-left : 10px" id="{{messege.dwid}}" width="35" height="35" ng-src="{{messege.dwimgsrc}}" alt="Music Files">
-                                      <br/><small ng-show="messege.showme">Size : {{messege.size}}</small>
+                                      <img id="{{messege.dwid}}" width="45" height="45" ng-src="{{messege.dwimgsrc}}" alt="Music File">
+                                      <br/><small ng-show="messege.showme">{{ messege.filename}} ({{messege.size}})</small>
                                     </a>
                                     <!-- <audio controls> -->
                                       <!-- <source src="horse.ogg" type="audio/ogg"> -->
@@ -59,12 +59,14 @@
                                     Your browser does not support the audio element.
                                     </audio> -->
                                   </p><!-- Audio File Close -->
-                                  <p ng-class="{'filename' : true}" ng-show="messege.isDocFile">
-                                    <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}" alt="Document">
-                                  </p>
-                                  <!-- <div class="pull-right">
-                                    <button class="btn btn-primary btn-sm btn-flat">Open</button>
-                                  </div> -->
+
+                                  <!-- PDF File Open -->
+                                  <p ng-class="{'filename' : true, 'chat-msg' : true}" ng-show="messege.isPDFFile">
+                                    <a href ng-click="openClickPDF(messege)">
+                                      <img id="{{messege.dwid}}" width="45" height="45" ng-src="{{messege.dwimgsrc}}" alt="PDF File">
+                                      <br/><small ng-show="messege.showme">{{ messege.filename}} ({{messege.size}})</small>
+                                    </a>
+                                  </p><!-- Doc file Close -->
                                 </div><!-- /.attachment -->
                             </div><!-- /.item-->
                           </div><!-- /.direct-chat-text -->
@@ -106,11 +108,11 @@
                         <!-- music file select angularjs -->
                         <button class="btn btn-warning btn-flat" data-toggle="" title="" ngf-select ng-model="musicFiles" ngf-accept="'audio/*'"><i class="fa fa-headphones"></i></button>
                         <!-- doc file select angularjs -->
-                        <button class="btn btn-warning btn-flat" data-widget="" ngf-select ng-model="docFiles" ngf-accept="'application/pdf'"><i class="fa fa-file-word-o"></i></button>
+                        <button class="btn btn-warning btn-flat" data-widget="" ngf-select ng-model="PDFFiles" ngf-accept="'application/pdf'"><i class="fa fa-file-word-o"></i></button>
                       </div>
                       <form action="#" method="post">
                         <div class="input-group">
-                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="true"/>
+                          <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
                           <span class="input-group-btn">
                             <button type="button" class="btn btn-warning btn-flat" ng-click="sendMsg()">Send</button>
                           </span>

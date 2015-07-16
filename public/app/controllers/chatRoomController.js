@@ -32,7 +32,7 @@ angular.module('Controllers')
         link: function(scope, element, attrs) {
           scope.$watch(attrs.focusMe, function(value) {
             if(value === true) { 
-              console.log('value=',value);
+              // console.log('value=',value);
               $timeout(function() {
                 element[0].focus();
                 scope[attrs.focusMe] = false;
@@ -80,20 +80,16 @@ angular.module('Controllers')
 		$location.path('/');
 	}
 
-	$socket.emit('get-online-members',function(data){
 
+// ================================== Online Members List ===============================
+	$socket.emit('get-online-members',function(data){
 	});
-	//Socket Handling of Online members.
-	$socket.on("online-members", function(data){
-			
+	$socket.on("online-members", function(data){			
 			$scope.users = data;
 	});
 
 
-    $scope.$watch('docFiles', function () {
-        // console.log($scope.files);
-        // $scope.sendDoc($scope.docFiles);
-    });
+
 // ================================== Common Functions ==================================    
 	function formatAMPM(date) {
 		var hours = date.getHours();
@@ -137,6 +133,7 @@ angular.module('Controllers')
 				//delivery report code goes here
 				if (data.success == true) {
 					$scope.chatMsg = "";
+					$scope.setFocus = true;
 					// console.log("Messege has deliverd successfully");
 				}else{
 					// console.log("Message not sent.");
@@ -189,7 +186,7 @@ angular.module('Controllers')
 				if ($scope.messeges[i].istype === "image") {
 					if($scope.messeges[i].dwid === msg.dwid){
 						$scope.messeges[i].showme = false;
-						$scope.messeges[i].imgsrc = msg.usrimg;
+						$scope.messeges[i].imgsrc = msg.serverimg;
 						break;	
 					}
 				}						
@@ -261,19 +258,19 @@ angular.module('Controllers')
     //         }
     //     }
     // };
-    $scope.sendDoc = function (files) {
-        if (files && files.length) {
-        	$scope.isFileSelected = true;
-            for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-                var dateString = formatAMPM(new Date());
-                console.log("file sending...");
-                $socket.emit('send-message',{ username : $rootScope.username, userAvatar : $rootScope.userAvatar, hasFile : $scope.isFileSelected , sendfile : file, istype : "doc", msgTime : dateString },function (data){
-                	// console.log("inside console",data);
-                });
-            }
-        }
-    };
+    // $scope.sendDoc = function (files) {
+    //     if (files && files.length) {
+    //     	$scope.isFileSelected = true;
+    //         for (var i = 0; i < files.length; i++) {
+    //             var file = files[i];
+    //             var dateString = formatAMPM(new Date());
+    //             console.log("file sending...");
+    //             $socket.emit('send-message',{ username : $rootScope.username, userAvatar : $rootScope.userAvatar, hasFile : $scope.isFileSelected , sendfile : file, istype : "doc", msgTime : dateString },function (data){
+    //             	// console.log("inside console",data);
+    //             });
+    //         }
+    //     }
+    // };
 
 // =========================================== Audio Sending Code =====================
     $scope.$watch('musicFiles', function () {
@@ -293,7 +290,7 @@ angular.module('Controllers')
 			checkMessegesMusic(data);
 		}else{
 			$scope.messeges.push(data);
-			console.log("Inside Username ", data);
+			// console.log("Inside Username ", data);
 		}
 	});
 	function checkMessegesMusic(msg){
@@ -304,8 +301,9 @@ angular.module('Controllers')
 					if($scope.messeges[i].dwid === msg.dwid){
 						$scope.messeges[i].showme = true;
 						$scope.messeges[i].musicFileName = msg.musicFileName;
+						$scope.messeges[i].filename = msg.filename;
 						$scope.messeges[i].size = msg.size;
-						$scope.messeges[i].dwimgsrc = "app/images/music_icon.png";
+						$scope.messeges[i].dwimgsrc = "app/images/music_icon1.png";
 						break;	
 					}
 				}						
@@ -326,7 +324,7 @@ angular.module('Controllers')
 			      		isMusicFile : true,
                 		istype : "music",
                 		showme : false,
-                		dwimgsrc : "app/images/music_icon.png", 
+                		dwimgsrc : "app/images/music_icon1.png", 
 			      		dwid : DWid, 
                 		msgTime : dateString
                 }		
@@ -341,7 +339,7 @@ angular.module('Controllers')
 			        audioData = fr.result;
 			        audio.filecontent = audioData;
 			        audio.filename = file.name;
-			      	console.log("im here inside sendImage : ", audioData);
+			      	// console.log("im here inside sendImage : ", audioData);
 			      	$http.post($rootScope.baseUrl + "/uploadAudio",audio, function (res){
 	                });	
 			      };
@@ -351,8 +349,80 @@ angular.module('Controllers')
     };
 
 //==================================== Doc Sending Code ==============================
-
-
+    $scope.$watch('PDFFiles', function () {
+        $scope.sendPDF($scope.PDFFiles);
+    });
+    $scope.openClickPDF = function(msg){
+		window.open('http://192.168.2.135:3000/'+msg.PDFFileName);
+	}
+	$socket.on("new message PDF", function(data){
+		if(data.username == $rootScope.username){
+			data.ownMsg = true;
+			data.dwimgsrc = "app/images/spin.gif";
+		}else{
+			data.ownMsg = false;
+		}
+		if((data.username == $rootScope.username) && data.repeatMsg){	
+			// console.log("checkMessegesDocPDF Inside", data);
+			checkMessegesPDF(data);
+		}else{
+			$scope.messeges.push(data);
+			// console.log("Inside Username ", data);
+		}
+	});
+	function checkMessegesPDF(msg){
+		// console.log(" checkMessegesDoc : ",msg);
+		for (var i = ($scope.messeges.length-1); i >= 0 ; i--) {
+			if($scope.messeges[i].hasFile){
+				if ($scope.messeges[i].istype === "PDF") {					
+					if($scope.messeges[i].dwid === msg.dwid){
+						$scope.messeges[i].showme = true;
+						$scope.messeges[i].PDFFileName = msg.PDFFileName;
+						$scope.messeges[i].filename = msg.filename;
+						$scope.messeges[i].size = msg.size;
+						$scope.messeges[i].dwimgsrc = "app/images/doc_icon.png";
+						break;	
+					}
+				}						
+			}
+		};
+	}
+    $scope.sendPDF = function (files) {
+        if (files && files.length) {
+        	$scope.isFileSelected = true;
+            for (var i = 0; i < files.length; i++) {
+                var file = files[i];
+                var dateString = formatAMPM(new Date());
+                var DWid = $rootScope.username + "dwid" + Date.now();
+                var PDF = {
+                		username : $rootScope.username, 
+			      		userAvatar : $rootScope.userAvatar, 
+			      		hasFile : $scope.isFileSelected ,
+			      		isPDFFile : true,
+                		istype : "PDF",
+                		showme : false,
+                		dwimgsrc : "app/images/doc_icon.png", 
+			      		dwid : DWid, 
+                		msgTime : dateString
+                }
+                $socket.emit('send-message',PDF,function (data){
+                });
+                var PDFData;
+                var fr = new FileReader();
+			    if (FileReader && files && files.length) {      
+			      fr.readAsDataURL(files[0]);
+			      fr.onload = function () {
+			        PDFData = fr.result;
+			        PDF.filecontent = PDFData;
+			        PDF.filename = file.name;
+			      	// console.log("im here inside sendImage : ", audioData);
+			      	$http.post($rootScope.baseUrl + "/uploadPDF",PDF, function (res){
+	                });	
+			      };
+				}
+            }
+        }
+    };
 
 
 
