@@ -161,7 +161,8 @@ angular.module('Controllers')
     $scope.openClickImage = function(msg){
 		if(!msg.ownMsg){
 		msg.showme = false;
-		msg.imgsrc = "app/images/demo.jpg";
+		msg.imgsrc = msg.serverimg;
+		// console.log(msg);
 		// window.open('http://192.168.2.135:3000/app/images/IJCSIT-paper_angularjs.doc');
 		// window.open("http://192.168.2.135:3000/app/images/demo.jpg");
 		}
@@ -353,6 +354,7 @@ angular.module('Controllers')
         $scope.sendPDF($scope.PDFFiles);
     });
     $scope.openClickPDF = function(msg){
+    	console.log(msg)
 		window.open('http://192.168.2.135:3000/'+msg.PDFFileName);
 	}
 	$socket.on("new message PDF", function(data){

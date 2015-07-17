@@ -13,7 +13,10 @@
                     <div class="box-header with-border">
                       <h3 class="box-title">Chat Room</h3>
                       <div class="box-tools pull-right">
-                        <button class="btn btn-box-tool" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
+                        <button class="btn btn-box-tool mobile" id="imgFiles" data-widget="" ngf-select ng-model="imageFiles" ngf-accept="'image/*'" title="select image"><i class="fa fa-photo"></i></button>
+                        <button class="btn btn-box-tool mobile" data-toggle="" title="" ngf-select ng-model="musicFiles" ngf-accept="'audio/*'"><i class="fa fa-headphones"></i></button>
+                        <button class="btn btn-box-tool mobile" data-widget="" ngf-select ng-model="PDFFiles" ngf-accept="'application/pdf'"><i class="fa fa-file-word-o"></i></button>
+                        <button class="btn btn-box-tool mobile toggle-contact-icon" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
                       </div>
                     </div><!-- /.box-header -->
                     <div class="box-body">
@@ -40,7 +43,7 @@
                                     <br/><small ng-show="!messege.ownMsg">{{ messege.filename}} ({{messege.size}})</small>
                                     </a><!-- Open Icon -->
                                     
-                                    <a ng-href="{{messege.imgsrc}}" data-lightbox="image-1" data-title="My caption" ng-hide="messege.showme">
+                                    <a ng-href="{{messege.imgsrc}}" data-lightbox="{{messege.dwid}}" data-title="My caption" ng-hide="messege.showme">
                                       <img ng-class="{'multiple-borders-white' : messege.ownMsg,'multiple-borders-black' : !messege.ownMsg}" id="{{messege.dwid+1}}" width="90" height="70" ng-src="{{messege.imgsrc}}" alt="Image File"> <!-- Image -->
                                     <!-- <img width="150" height="100" ng-src="data:image/jpg;base64,{{messege.sendfile}}" alt="Image File"> -->
                                     </a>
@@ -97,7 +100,7 @@
                       </div>
                     </div><!-- /.box-body -->
                     <div class="box-footer">
-                      <div class="box-tools pull-right">
+                      <div class="box-tools pull-right desktop">
                         <!-- image select angularjs -->
                         <button class="btn btn-warning btn-flat" id="imgFiles" data-widget="" ngf-select ng-model="imageFiles" ngf-accept="'image/*'"><i class="fa fa-photo"></i></button>
                         <!-- <form style="display: inline-block;" name="ImageForm" method="post" action="/uploadImage" enctype="multipart/form-data"> -->
@@ -122,7 +125,7 @@
                     </div><!-- /.box -->
                   </div>
                   
-                  <div class="col-sm-3">
+                  <div class="col-sm-3 toggle-contact-list">
                     <div class="box box-warning direct-chat direct-chat-warning">  
                     <div class="box-header with-border">
                       <h3 class="box-title">Online Members</h3>
