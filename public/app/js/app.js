@@ -3,7 +3,6 @@ var App = angular.module('ChatRoom',['ngResource','ngRoute','ngStorage','socket.
 	$rootScope.baseUrl = 'http://192.168.2.135:8282';
 }]);
 App.config(function ($routeProvider, $socketProvider){
-	// $socketProvider.setConnectionUrl('http://localhost:3000');
 	$socketProvider.setConnectionUrl('http://192.168.2.135:8282');
 
 	$routeProvider

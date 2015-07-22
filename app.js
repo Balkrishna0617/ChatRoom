@@ -15,7 +15,7 @@
 // var socket_id;
 // var socket_data;
 
-// server.listen(3000,'192.168.2.135');
+// server.listen(8282);
 
 // app.use(bodyParser.json({ 
 //     limit: 1024 * 10000
@@ -72,14 +72,7 @@
 // 			callback({success:true});	
 // 		}else if(data.hasFile){
 // 			if(data.istype == "image"){
-// 				// console.log("recieved file");
-// 				// data.sendfile = "";
 // 				socket.emit('new message image', data);
-// 				// var base64file = base64ArrayBuffer(data.sendfile);
-// 				// console.log("sending file");
-// 				// data.sendfile = base64file;
-
-				
 // 				callback({success:true});
 // 			} else if(data.istype == "music"){
 // 				socket.emit('new message music', data);
@@ -90,8 +83,7 @@
 // 			}
 // 		}else{
 // 			callback({ success:false});
-// 		}
-		
+// 		}		
 // 	});
 
 // 	socket.on('send-image', function(data, callback){
@@ -117,7 +109,6 @@
 // });
 
 // app.post('/uploadImage',function (req, res){
-// 	// console.log(req.body);
 // 	var userName = req.body.username;
 // 	var useravatar = req.body.userAvatar;
 // 	var hasfile = req.body.hasFile;
@@ -130,9 +121,8 @@
 // 	var filename = Date.now() + req.body.filename;
 // 	var filecontent = req.body.filecontent;
 // 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
-// 	// console.log(filecontent);
-	
-// 	fs.writeFile("./public/app/upload/images/"+filename, filecontent, function(){
+// 	binaryData = new Buffer(filecontent, 'base64').toString('binary');
+// 	fs.writeFile("./public/app/upload/images/"+filename, binaryData, "binary", function(){
 // 		var data = { 
 // 			username : userName, 
 // 			userAvatar : useravatar, 
@@ -144,16 +134,14 @@
 // 			dwimgsrc : DWimgsrc, 
 // 			dwid : DWid, 
 // 			msgTime : msgtime, 
-// 			serverimg : "app/images/demo.jpg",
+// 			serverfilename : filename,
 // 			filename : req.body.filename,
 // 			size : '579kbs'
 // 		};
 // 	ios.sockets.emit('new message image', data);
-// 	console.log("done writting");
 // 	res.send({"success" : "res from server"});
 // 	});
 // });
-// // ios.sockets.emit('new message music', data);
 
 // app.post('/uploadAudio',function (req, res){
 // 	var userName = req.body.username;
@@ -168,10 +156,8 @@
 // 	var filename = Date.now() + req.body.filename;
 // 	var filecontent = req.body.filecontent;
 // 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
-// 	// console.log(filecontent);
-	
-// 	fs.writeFile("./public/app/upload/music/"+filename, filecontent, function(){
-// 		// console.log("dwimgsrc", DWimgsrc);
+// 	binaryData = new Buffer(filecontent, 'base64').toString('binary');	
+// 	fs.writeFile("./public/app/upload/music/"+filename, binaryData, "binary", function(){
 // 		var data = { 
 // 			username : userName, 
 // 			userAvatar : useravatar, 
@@ -182,7 +168,7 @@
 // 			showme : true, 
 // 			dwimgsrc : DWimgsrc, 
 // 			dwid : DWid,
-// 			musicFileName : "abcd2.mp3", 
+// 			serverfilename : filename, 
 // 			msgTime : msgtime,
 // 			filename : req.body.filename,
 // 			size : '5.79kb'
@@ -206,10 +192,8 @@
 // 	var filename = Date.now() + req.body.filename;
 // 	var filecontent = req.body.filecontent;
 // 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
-// 	// console.log(filecontent);
-	
-// 	fs.writeFile("./public/app/upload/doc/"+filename, filecontent, function(){
-// 		// console.log("dwimgsrc", DWimgsrc);
+// 	binaryData = new Buffer(filecontent, 'base64').toString('binary');	
+// 	fs.writeFile("./public/app/upload/doc/"+filename, binaryData, "binary", function(){
 // 		var data = { 
 // 			username : userName, 
 // 			userAvatar : useravatar, 
@@ -220,7 +204,7 @@
 // 			showme : true, 
 // 			dwimgsrc : DWimgsrc, 
 // 			dwid : DWid,
-// 			PDFFileName : "grid-computing.pdf", 
+// 			serverfilename : filename, 
 // 			msgTime : msgtime,
 // 			filename : req.body.filename,
 // 			size : '7.79mb'
@@ -230,57 +214,6 @@
 // 	res.send({"success" : "res from server"});
 // 	});
 // });
-// // function base64ArrayBuffer(arrayBuffer) {
-// //   var base64    = ''
-// //   var encodings = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
- 
-// //   var bytes         = new Uint8Array(arrayBuffer)
-// //   var byteLength    = bytes.byteLength
-// //   var byteRemainder = byteLength % 3
-// //   var mainLength    = byteLength - byteRemainder
- 
-// //   var a, b, c, d
-// //   var chunk
- 
-// //   // Main loop deals with bytes in chunks of 3
-// //   for (var i = 0; i < mainLength; i = i + 3) {
-// //     // Combine the three bytes into a single integer
-// //     chunk = (bytes[i] << 16) | (bytes[i + 1] << 8) | bytes[i + 2]
- 
-// //     // Use bitmasks to extract 6-bit segments from the triplet
-// //     a = (chunk & 16515072) >> 18 // 16515072 = (2^6 - 1) << 18
-// //     b = (chunk & 258048)   >> 12 // 258048   = (2^6 - 1) << 12
-// //     c = (chunk & 4032)     >>  6 // 4032     = (2^6 - 1) << 6
-// //     d = chunk & 63               // 63       = 2^6 - 1
- 
-// //     // Convert the raw binary segments to the appropriate ASCII encoding
-// //     base64 += encodings[a] + encodings[b] + encodings[c] + encodings[d]
-// //   }
- 
-// //   // Deal with the remaining bytes and padding
-// //   if (byteRemainder == 1) {
-// //     chunk = bytes[mainLength]
- 
-// //     a = (chunk & 252) >> 2 // 252 = (2^6 - 1) << 2
- 
-// //     // Set the 4 least significant bits to zero
-// //     b = (chunk & 3)   << 4 // 3   = 2^2 - 1
- 
-// //     base64 += encodings[a] + encodings[b] + '=='
-// //   } else if (byteRemainder == 2) {
-// //     chunk = (bytes[mainLength] << 8) | bytes[mainLength + 1]
- 
-// //     a = (chunk & 64512) >> 10 // 64512 = (2^6 - 1) << 10
-// //     b = (chunk & 1008)  >>  4 // 1008  = (2^6 - 1) << 4
- 
-// //     // Set the 2 least significant bits to zero
-// //     c = (chunk & 15)    <<  2 // 15    = 2^4 - 1
- 
-// //     base64 += encodings[a] + encodings[b] + encodings[c] + '='
-// //   }
-  
-// //   return base64
-// // }
 var express = require('express');
 var app = express();
 var http = require('http');
@@ -297,6 +230,7 @@ var online_member = [];
 var temp1;
 var socket_id;
 var socket_data;
+var files_array  = [];
 
 server.listen(8282);
 
@@ -355,14 +289,7 @@ ios.on('connection', function(socket){
 			callback({success:true});	
 		}else if(data.hasFile){
 			if(data.istype == "image"){
-				// console.log("recieved file");
-				// data.sendfile = "";
 				socket.emit('new message image', data);
-				// var base64file = base64ArrayBuffer(data.sendfile);
-				// console.log("sending file");
-				// data.sendfile = base64file;
-
-				
 				callback({success:true});
 			} else if(data.istype == "music"){
 				socket.emit('new message music', data);
@@ -373,18 +300,16 @@ ios.on('connection', function(socket){
 			}
 		}else{
 			callback({ success:false});
-		}
-		
+		}		
 	});
 
 	socket.on('send-image', function(data, callback){
-		console.log(data);
+		// console.log(data);
 		callback("upload messege from server");	
 	});
 
 	socket.on('disconnect', function () {	
-		console.log('one client disconnected');
-
+		// console.log('one client disconnected');
 		delete nickname[socket.username];
 		online_member = [];
 		x = Object.keys(nickname);
@@ -400,7 +325,6 @@ ios.on('connection', function(socket){
 });
 
 app.post('/uploadImage',function (req, res){
-	// console.log(req.body);
 	var userName = req.body.username;
 	var useravatar = req.body.userAvatar;
 	var hasfile = req.body.hasFile;
@@ -410,12 +334,16 @@ app.post('/uploadImage',function (req, res){
 	var DWimgsrc = req.body.dwimgsrc;
 	var DWid = req.body.dwid;
 	var msgtime = req.body.msgTime;
-	var filename = Date.now() + req.body.filename;
+    var imgdatetimenow = Date.now();
+	var filename =  imgdatetimenow + req.body.filename;
 	var filecontent = req.body.filecontent;
 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
-	// console.log(filecontent);
+    // console.log("Date time now",imgdatetimenow);
 	binaryData = new Buffer(filecontent, 'base64').toString('binary');
 	fs.writeFile("./public/app/upload/images/"+filename, binaryData, "binary", function(){
+    var imagefile =  fs.statSync("./public/app/upload/images/"+filename);
+    var imagesize =  bytesToSize(imagefile["size"]);
+    // console.log("image file size",imagesize);
 		var data = { 
 			username : userName, 
 			userAvatar : useravatar, 
@@ -427,17 +355,29 @@ app.post('/uploadImage',function (req, res){
 			dwimgsrc : DWimgsrc, 
 			dwid : DWid, 
 			msgTime : msgtime, 
-			serverimg : filename,
+			serverfilename : filename,  //serverimg to be removed
 			filename : req.body.filename,
-			size : '579kbs'
+			size : imagesize
 		};
+                
+        var img_file = {
+            dwid : DWid,
+            filename : req.body.filename,
+            filetype : req.body.istype,
+            serverfilename : filename,
+            serverfilepath : "./public/app/upload/images/"+filename,
+            expirytime : imgdatetimenow + 120000
+
+        };
+        files_array.push(img_file);
+        // console.log("Image file to add in files_array",img_file);
+        // console.log("data in files_array",files_array);        
 	ios.sockets.emit('new message image', data);
     
-	console.log("done writting", data);
+	// console.log("done writting", data);
 	res.send({"success" : "res from server"});
 	});
 });
-// ios.sockets.emit('new message music', data);
 
 app.post('/uploadAudio',function (req, res){
 	var userName = req.body.username;
@@ -449,13 +389,18 @@ app.post('/uploadAudio',function (req, res){
 	var DWimgsrc = req.body.dwimgsrc;
 	var DWid = req.body.dwid;
 	var msgtime = req.body.msgTime;
-	var filename = Date.now() + req.body.filename;
+    var audiodatetimenow = Date.now();
+	var filename = audiodatetimenow + req.body.filename;
 	var filecontent = req.body.filecontent;
 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
 	// console.log(filecontent);
 	binaryData = new Buffer(filecontent, 'base64').toString('binary');	
 	fs.writeFile("./public/app/upload/music/"+filename, binaryData, "binary", function(){
 		// console.log("dwimgsrc", DWimgsrc);
+    var audiofile =  fs.statSync("./public/app/upload/music/"+filename);
+    var audiosize = bytesToSize(audiofile["size"]);
+    // console.log("music file size",audiosize);
+
 		var data = { 
 			username : userName, 
 			userAvatar : useravatar, 
@@ -466,13 +411,24 @@ app.post('/uploadAudio',function (req, res){
 			showme : true, 
 			dwimgsrc : DWimgsrc, 
 			dwid : DWid,
-			musicFileName : filename, 
+			serverfilename : filename, 
 			msgTime : msgtime,
 			filename : req.body.filename,
-			size : '5.79kb'
+			size : audiosize
 		};
+        var audio_file = { 
+            dwid : DWid,
+            filename : req.body.filename,
+            filetype : req.body.istype,
+            serverfilename : filename,
+            serverfilepath : "./public/app/upload/music/"+filename,
+            expirytime : audiodatetimenow + (120000)           
+        };
+    files_array.push(audio_file);
+    // console.log("Audio file to add in files_array",audio_file);
+    // console.log("data in files_array",files_array);                
 	ios.sockets.emit('new message music', data);
-	console.log("done writting");
+	// console.log("done writting");
 	res.send({"success" : "res from server"});
 	});
 });
@@ -487,13 +443,17 @@ app.post('/uploadPDF',function (req, res){
 	var DWimgsrc = req.body.dwimgsrc;
 	var DWid = req.body.dwid;
 	var msgtime = req.body.msgTime;
-	var filename = Date.now() + req.body.filename;
+    var pdfdatetimenow = Date.now();
+	var filename = pdfdatetimenow + req.body.filename;
 	var filecontent = req.body.filecontent;
 	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
 	// console.log(filecontent);
 	binaryData = new Buffer(filecontent, 'base64').toString('binary');	
 	fs.writeFile("./public/app/upload/doc/"+filename, binaryData, "binary", function(){
 		// console.log("dwimgsrc", DWimgsrc);
+    var pdffile =  fs.statSync("./public/app/upload/doc/"+filename);
+    var pdfsize =  bytesToSize(pdffile["size"]);
+    // console.log("pdf file size",pdfsize);
 		var data = { 
 			username : userName, 
 			userAvatar : useravatar, 
@@ -504,13 +464,113 @@ app.post('/uploadPDF',function (req, res){
 			showme : true, 
 			dwimgsrc : DWimgsrc, 
 			dwid : DWid,
-			PDFFileName : filename, 
+			serverfilename : filename, 
 			msgTime : msgtime,
 			filename : req.body.filename,
-			size : '7.79mb'
+			size : pdfsize
 		};
+        var pdf_file = { 
+            dwid : DWid,
+            filename : req.body.filename,
+            filetype : req.body.istype,
+            serverfilename : filename,
+            serverfilepath : "./public/app/upload/doc/"+filename,
+            expirytime : pdfdatetimenow + (120000)           
+        };
+    files_array.push(pdf_file);
+    // console.log("pdf file to add in files_array",pdf_file);
+    // console.log("data in files_array",files_array);                        
 	ios.sockets.emit('new message PDF', data);
-	console.log("done writting");
+	// console.log("done writting");
 	res.send({"success" : "res from server"});
 	});
 });
+
+
+app.post('/getfile', function(req, res){
+    var data = req.body.dwid;
+    var filenm = req.body.filename;
+    //var fileid = 'ppdwid1437387292909';
+    // console.log("received from request", req.body);
+    // console.log("received from request data : ", data);
+    var dwidexist = false;
+    var req_file_data;
+    
+    for(var i = 0; i<files_array.length; i++)
+    {
+        if(files_array[i].dwid == data)
+        {
+            dwidexist = true;
+            req_file_data = files_array[i];
+        }
+    }
+    if(dwidexist == true)
+    {
+        if(req_file_data.expirytime < Date.now())
+        {
+            // console.log("inside expired");
+	        console.log("This is the requested file data:",req_file_data);
+	        var deletedfileinfo = { 
+                isExpired : true,
+	            expmsg : "File has beed removed."
+	        	};
+	            fs.unlink(req_file_data.serverfilepath, function(err){
+	               	if (err) {
+	                   	return console.error(err);
+	                }
+	               		console.log("File deleted successfully!");
+	    				res.send(deletedfileinfo);           
+	            });
+               var index = files_array.indexOf(req_file_data);
+               files_array.splice(index,1);
+               console.log("after delete:",files_array);            
+        }else{
+        	// console.log("record found");
+            var fileinfo = {
+            	isExpired : false, 
+            	filename : req_file_data.filename,            
+            	serverfilename : req_file_data.serverfilename };
+            res.send(fileinfo);
+        }
+    }else{         
+  	    	// console.log("record not found");
+	    	var deletedfileinfo = { 
+	                isExpired : true,
+	                expmsg : "File has beed removed."
+	        };
+	        res.send(deletedfileinfo);       
+        }
+});
+setInterval(function() {routine_cleanup();}, 60000 * 0.5 );
+
+function bytesToSize(bytes) {
+    var sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+    if (bytes == 0) return 'n/a';
+    var i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)));
+    if (i == 0) return bytes + ' ' + sizes[i]; 
+    return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
+};
+
+function routine_cleanup()
+{
+    console.log("i am called on time");
+    console.log("Length of files array",files_array.length);
+    for(var i=0; i<files_array.length; i++)
+    {
+            console.log(i,":",files_array[i].expirytime)
+            if(Date.now() > files_array[i].expirytime)
+            {
+                console.log("This file expired",files_array[i].filename);
+                fs.unlink(files_array[i].serverfilepath, function(err) 
+                          {
+                   if (err) {
+                       return console.error(err);
+                            }
+                   console.log("File deleted successfully!");
+                            });
+                   files_array.splice(i,1);
+                   console.log("after delete:",files_array);
+
+            }
+    }
+}
