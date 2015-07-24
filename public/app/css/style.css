@@ -60,9 +60,36 @@ html,body{height:100%;}
 .direct-chat-messages{
 	height : 450px;
 }
+.attachment-icon-right{
+	float : right;
+	padding: 5px 0px 0px 5px;
+}
+.attachment-icon-left{
+	float : left;
+	padding: 5px 5px 0px 0px;
+}
+.attachment-msg-right{
+	float : right;
+}
+.attachment-msg-left{
+	float : left;
+}
+.dw-icon{
+	font-size : 17px;
+}
+.hidden-link{
+	visibility: hidden;
+	position: absolute;
+	font-size: 1px;
+}
 .decs-text{
-	color : #0D7CC0;
+	color : #333;
 	font-size: 12.5px;
+	margin: 0px;
+	display: block;
+}
+.decs-text:hover{
+	color: #333;
 }
 .wordwrap {    
    word-wrap: break-word;      /* IE */
@@ -71,7 +98,7 @@ html,body{height:100%;}
 	height: 20px;
 	width: 100%;
 	position: absolute;
-	top: 90%;
+	top: 95%;
 }
 #alert{
 	background-color: #000;
