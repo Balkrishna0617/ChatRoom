@@ -276,7 +276,7 @@ angular.module('Controllers')
 				fd.append('dwid', DWid);
 				fd.append('msgTime', dateString);
 				fd.append('filename', file.name);
-				$http.post("/v1/uploadImage", fd, {
+				$http.post($rootScope.baseUrl +"/v1/uploadImage", fd, {
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {

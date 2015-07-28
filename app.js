@@ -35,7 +35,7 @@ app.use(bodyParser.raw({ 	// setting raw limit
 app.use(bodyParser.urlencoded({		// setting url encoding
         extended: true
 }));
-// static file configuration
+//static file configuration
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/app/upload/images'));
 app.use(express.static(__dirname + '/public/app/upload/music'));
@@ -172,6 +172,8 @@ app.post('/v1/uploadAudio',function (req, res){
       res.end();
     });
     form.parse(req,function(err,fields,files){
+		console.log("files : ",files);
+		console.log("fields : ", fields);
 		var data = { 
 				username : fields.username, 
 				userAvatar : fields.userAvatar, 
