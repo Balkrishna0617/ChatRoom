@@ -264,19 +264,25 @@ angular.module('Controllers')
 			    };
                 $socket.emit('send-message',image,function (data){       // sending new image message via socket    
                 });
-               	var imageData;
-               	var fr = new FileReader();
-			    if (FileReader && files && files.length) {					   
-			      fr.readAsDataURL(files[0]);
-			      fr.onload = function () {
-			        imageData = fr.result;
-			      	imageData = imageData.toString();
-			      	image.filecontent = imageData; 
-			      	image.filename = file.name;			      	
-			      	$http.post($rootScope.baseUrl + "/v1/uploadImage",image, function (res){		// asynchronous image sending code.
-	                });	
-			      };
-				}
+                var fd = new FormData();
+    			fd.append('file', file);
+        		fd.append('username', $rootScope.username);
+        		fd.append('userAvatar', $rootScope.userAvatar);
+        		fd.append('hasFile', $scope.isFileSelected);
+        		fd.append('isImageFile', true);
+				fd.append('istype', "image");        		
+				fd.append('showme', true);
+				fd.append('dwimgsrc', "app/images/gallery_icon5.png");
+				fd.append('dwid', DWid);
+				fd.append('msgTime', dateString);
+				fd.append('filename', file.name);
+				$http.post("/v1/uploadImage", fd, {
+		            transformRequest: angular.identity,
+		            headers: { 'Content-Type': undefined }
+		        }).then(function (response) {
+		            console.log(response);
+		        });
+
             }
         }
     };
@@ -404,18 +410,24 @@ angular.module('Controllers')
 
                 $socket.emit('send-message',audio,function (data){		// sending new image message via socket
                 });
-                var audioData;
-                var fr = new FileReader();
-			    if (FileReader && files && files.length) {      
-			      fr.readAsDataURL(files[0]);
-			      fr.onload = function () {
-			        audioData = fr.result;
-			        audio.filecontent = audioData;
-			        audio.filename = file.name;
-			      	$http.post($rootScope.baseUrl + "/v1/uploadAudio",audio, function (res){	// asynchronous image sending code.
-	                });	
-			      };
-				}                
+                var fd = new FormData();
+    			fd.append('file', file);
+        		fd.append('username', $rootScope.username);
+        		fd.append('userAvatar', $rootScope.userAvatar);
+        		fd.append('hasFile', $scope.isFileSelected);
+        		fd.append('isMusicFile', true);
+				fd.append('istype', "music");        		
+				fd.append('showme', false);
+				fd.append('dwimgsrc', "app/images/musicplay_icon.png");
+				fd.append('dwid', DWid);
+				fd.append('msgTime', dateString);
+				fd.append('filename', file.name);
+				$http.post('/v1/uploadAudio', fd, {
+		            transformRequest: angular.identity,
+		            headers: { 'Content-Type': undefined }
+		        }).then(function (response) {
+		            console.log(response);
+		        });    
             }
         }
     };
@@ -445,6 +457,7 @@ angular.module('Controllers')
 
 	// recieving new document message
 	$socket.on("new message PDF", function(data){
+		console.log("Recieved new pdf msg ", data);
 		if(data.username == $rootScope.username){
 			data.ownMsg = true;
 			data.dwimgsrc = "app/images/spin.gif";
@@ -460,9 +473,11 @@ angular.module('Controllers')
 
 	// replacing spinning wheel in sender message after document message delivered to everyone.
 	function checkMessegesPDF(msg){
+		console.log("inside checkMessegesPDF", msg);
 		for (var i = ($scope.messeges.length-1); i >= 0 ; i--) {
 			if($scope.messeges[i].hasFile){
-				if ($scope.messeges[i].istype === "PDF") {					
+				if ($scope.messeges[i].istype === "PDF") {
+					console.log("inside PDF", $scope.messeges[i]);					
 					if($scope.messeges[i].dwid === msg.dwid){
 						$scope.messeges[i].showme = true;
 						$scope.messeges[i].serverfilename = msg.serverfilename;
@@ -543,18 +558,24 @@ angular.module('Controllers')
                 }
                 $socket.emit('send-message',PDF,function (data){
                 });
-                var PDFData;
-                var fr = new FileReader();
-			    if (FileReader && files && files.length) {      
-			      fr.readAsDataURL(files[0]);
-			      fr.onload = function () {
-			        PDFData = fr.result;
-			        PDF.filecontent = PDFData;
-			        PDF.filename = file.name;
-			      	$http.post($rootScope.baseUrl + "/v1/uploadPDF",PDF, function (res){
-	                });	
-			      };
-				}
+                var fd = new FormData();
+    			fd.append('file', file);
+        		fd.append('username', $rootScope.username);
+        		fd.append('userAvatar', $rootScope.userAvatar);
+        		fd.append('hasFile', $scope.isFileSelected);
+        		fd.append('isPDFFile', true);
+				fd.append('istype', "PDF");        		
+				fd.append('showme', false);
+				fd.append('dwimgsrc', "app/images/doc_icon.png");
+				fd.append('dwid', DWid);
+				fd.append('msgTime', dateString);
+				fd.append('filename', file.name);
+				$http.post("/v1/uploadPDF", fd, {
+		            transformRequest: angular.identity,
+		            headers: { 'Content-Type': undefined }
+		        }).then(function (response) {
+		            console.log(response);
+		        });
             }
         }
     };

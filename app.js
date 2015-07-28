@@ -6,6 +6,8 @@ var fs = require('fs');						// fs module for handling file operations
 var server = http.createServer(app);		// creating server
 var io = require('socket.io');				// using sockets
 var ios = io.listen(server);				// listening sockets
+var formidable = require('formidable');		// file upload module
+var util = require('util');
 
 // Initializing Variables
 var nickname = [];
@@ -32,7 +34,6 @@ app.use(bodyParser.raw({ 	// setting raw limit
 app.use(bodyParser.urlencoded({		// setting url encoding
         extended: true
 }));
-
 // static file configuration
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/app/upload/images'));
@@ -98,11 +99,6 @@ ios.on('connection', function(socket){
 			}
 		}		
 	});
-
-	// socket.on('send-image', function(data, callback){
-	// 	// console.log(data);
-	// 	callback("upload messege from server");	
-	// });
 	
 	// disconnect user handling 
 	socket.on('disconnect', function () {	
@@ -122,156 +118,133 @@ ios.on('connection', function(socket){
 
 // route for uploading images asynchronously
 app.post('/v1/uploadImage',function (req, res){
-	var userName = req.body.username;
-	var useravatar = req.body.userAvatar;
-	var hasfile = req.body.hasFile;
-	var isimagefile = req.body.isImageFile;
-	var isType = req.body.istype;
-	var showMe = req.body.dwimgsrc;
-	var DWimgsrc = req.body.dwimgsrc;
-	var DWid = req.body.dwid;
-	var msgtime = req.body.msgTime;
-    var imgdatetimenow = Date.now();
-	var filename =  imgdatetimenow + req.body.filename;
-	var filecontent = req.body.filecontent;
-	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
+	var imgdatetimenow = Date.now();
+	var form = new formidable.IncomingForm({
+      	uploadDir: __dirname + '/public/app/upload/images',
+      	keepExtensions: true
+      });
 
-	binaryData = new Buffer(filecontent, 'base64').toString('binary');
-	fs.writeFile("./public/app/upload/images/"+filename, binaryData, "binary", function(){
-    var imagefile =  fs.statSync("./public/app/upload/images/"+filename);
-    var imagesize =  bytesToSize(imagefile["size"]);
-
-	var data = { 
-		username : userName, 
-		userAvatar : useravatar, 
-		repeatMsg : true, 
-		hasFile : hasfile, 
-		isImageFile : isimagefile, 
-		istype : isType, 
-		showme : showMe, 
-		dwimgsrc : DWimgsrc, 
-		dwid : DWid, 
-		msgTime : msgtime, 
-		serverfilename : filename,  //serverimg to be removed
-		filename : req.body.filename,
-		size : imagesize
-	};
-                
-    var img_file = {
-        dwid : DWid,
-        filename : req.body.filename,
-        filetype : req.body.istype,
-        serverfilename : filename,
-        serverfilepath : "./public/app/upload/images/"+filename,
-        expirytime : imgdatetimenow + 120000
-
-    };
-
-    files_array.push(img_file);    
-	ios.sockets.emit('new message image', data);
-	res.send({"success" : "res from server"});
-	});
+	form.on('end', function() {
+      res.end();
+    });
+    
+    form.parse(req,function(err,fields,files){
+		var data = { 
+				username : fields.username, 
+				userAvatar : fields.userAvatar, 
+				repeatMsg : true, 
+				hasFile : fields.hasFile, 
+				isImageFile : fields.isImageFile, 
+				istype : fields.istype, 
+				showme : fields.showme, 
+				dwimgsrc : fields.dwimgsrc, 
+				dwid : fields.dwid,
+				serverfilename : baseName(files.file.path), 
+				msgTime : fields.msgTime,
+				filename : files.file.name,
+				size : bytesToSize(files.file.size)
+		};
+	    var image_file = { 
+		        dwid : fields.dwid,
+		        filename : files.file.name,
+		        filetype : fields.istype,
+		        serverfilename : baseName(files.file.path),
+		        serverfilepath : files.file.path,
+		        expirytime : imgdatetimenow + (120000)           
+	    };
+	    files_array.push(image_file);
+		ios.sockets.emit('new message image', data);
+    });
 });
+
+function baseName(str)
+{
+	console.log("This is mine : ", str);
+   var base = new String(str).substring(str.lastIndexOf('/') + 1); 
+    
+   return base;
+}
 
 // route for uploading audio asynchronously
 app.post('/v1/uploadAudio',function (req, res){
-	var userName = req.body.username;
-	var useravatar = req.body.userAvatar;
-	var hasfile = req.body.hasFile;
-	var ismusicfile = req.body.isMusicFile;
-	var isType = req.body.istype;
-	var showMe = req.body.showme;
-	var DWimgsrc = req.body.dwimgsrc;
-	var DWid = req.body.dwid;
-	var msgtime = req.body.msgTime;
-    var audiodatetimenow = Date.now();
-	var filename = audiodatetimenow + req.body.filename;
-	var filecontent = req.body.filecontent;
-	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
+	var userName, useravatar, hasfile, ismusicfile, isType, showMe, DWimgsrc, DWid, msgtime;
+	var imgdatetimenow = Date.now();
+	var form = new formidable.IncomingForm({
+      	uploadDir: __dirname + '/public/app/upload/music',
+      	keepExtensions: true
+      });
 
-	binaryData = new Buffer(filecontent, 'base64').toString('binary');	
-	fs.writeFile("./public/app/upload/music/"+filename, binaryData, "binary", function(){
-    var audiofile =  fs.statSync("./public/app/upload/music/"+filename);
-    var audiosize = bytesToSize(audiofile["size"]);
 
-	var data = { 
-		username : userName, 
-		userAvatar : useravatar, 
-		repeatMsg : true, 
-		hasFile : hasfile, 
-		isMusicFile : ismusicfile, 
-		istype : isType, 
-		showme : true, 
-		dwimgsrc : DWimgsrc, 
-		dwid : DWid,
-		serverfilename : filename, 
-		msgTime : msgtime,
-		filename : req.body.filename,
-		size : audiosize
-	};
-    var audio_file = { 
-        dwid : DWid,
-        filename : req.body.filename,
-        filetype : req.body.istype,
-        serverfilename : filename,
-        serverfilepath : "./public/app/upload/music/"+filename,
-        expirytime : audiodatetimenow + (120000)           
-    };
-
-    files_array.push(audio_file);
-	ios.sockets.emit('new message music', data);
-	res.send({"success" : "res from server"});
-	});
+	form.on('end', function() {
+      res.end();
+    });
+    form.parse(req,function(err,fields,files){
+		var data = { 
+				username : fields.username, 
+				userAvatar : fields.userAvatar, 
+				repeatMsg : true, 
+				hasFile : fields.hasFile, 
+				isMusicFile : fields.isMusicFile, 
+				istype : fields.istype, 
+				showme : fields.showme, 
+				dwimgsrc : fields.dwimgsrc, 
+				dwid : fields.dwid,
+				serverfilename : baseName(files.file.path), 
+				msgTime : fields.msgTime,
+				filename : files.file.name,
+				size : bytesToSize(files.file.size)
+		};
+	    var audio_file = { 
+		        dwid : fields.dwid,
+		        filename : files.file.name,
+		        filetype : fields.istype,
+		        serverfilename : baseName(files.file.path),
+		        serverfilepath : files.file.path,
+		        expirytime : imgdatetimenow + (120000)           
+	    };
+	    files_array.push(audio_file);
+		ios.sockets.emit('new message music', data);
+    });
 });
 
 // route for uploading document asynchronously
 app.post('/v1/uploadPDF',function (req, res){
-	var userName = req.body.username;
-	var useravatar = req.body.userAvatar;
-	var hasfile = req.body.hasFile;
-	var ispdffile = req.body.isPDFFile;
-	var isType = req.body.istype;
-	var showMe = req.body.showme;
-	var DWimgsrc = req.body.dwimgsrc;
-	var DWid = req.body.dwid;
-	var msgtime = req.body.msgTime;
-    var pdfdatetimenow = Date.now();
-	var filename = pdfdatetimenow + req.body.filename;
-	var filecontent = req.body.filecontent;
-	var filecontent = filecontent.substring(filecontent.indexOf(',')+1);
+	var imgdatetimenow = Date.now();
+	var form = new formidable.IncomingForm({
+      	uploadDir: __dirname + '/public/app/upload/doc',
+      	keepExtensions: true
+      });
 
-	binaryData = new Buffer(filecontent, 'base64').toString('binary');	
-	fs.writeFile("./public/app/upload/doc/"+filename, binaryData, "binary", function(){
-    var pdffile =  fs.statSync("./public/app/upload/doc/"+filename);
-    var pdfsize =  bytesToSize(pdffile["size"]);
-
+	form.on('end', function() {
+      res.end();
+    });
+    form.parse(req,function(err,fields,files){
 		var data = { 
-			username : userName, 
-			userAvatar : useravatar, 
-			repeatMsg : true, 
-			hasFile : hasfile, 
-			isPDFFile : ispdffile, 
-			istype : isType, 
-			showme : true, 
-			dwimgsrc : DWimgsrc, 
-			dwid : DWid,
-			serverfilename : filename, 
-			msgTime : msgtime,
-			filename : req.body.filename,
-			size : pdfsize
+				username : fields.username, 
+				userAvatar : fields.userAvatar, 
+				repeatMsg : true, 
+				hasFile : fields.hasFile, 
+				isPDFFile : fields.isPDFFile, 
+				istype : fields.istype, 
+				showme : fields.showme, 
+				dwimgsrc : fields.dwimgsrc, 
+				dwid : fields.dwid,
+				serverfilename : baseName(files.file.path), 
+				msgTime : fields.msgTime,
+				filename : files.file.name,
+				size : bytesToSize(files.file.size)
 		};
-        var pdf_file = { 
-            dwid : DWid,
-            filename : req.body.filename,
-            filetype : req.body.istype,
-            serverfilename : filename,
-            serverfilepath : "./public/app/upload/doc/"+filename,
-            expirytime : pdfdatetimenow + (120000)           
-        };
-    files_array.push(pdf_file);                       
-	ios.sockets.emit('new message PDF', data);
-	res.send({"success" : "res from server"});
-	});
+	    var pdf_file = { 
+		        dwid : fields.dwid,
+		        filename : files.file.name,
+		        filetype : fields.istype,
+		        serverfilename : baseName(files.file.path),
+		        serverfilepath : files.file.path,
+		        expirytime : imgdatetimenow + (120000)           
+	    };
+	    files_array.push(pdf_file);
+		ios.sockets.emit('new message PDF', data);
+    });
 });
 
 // route for checking requested file , does exist on server or not
@@ -354,4 +327,4 @@ function routine_cleanup()
                    files_array.splice(i,1);
             }
     }
-}
+};
