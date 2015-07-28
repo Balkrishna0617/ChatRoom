@@ -280,7 +280,7 @@ angular.module('Controllers')
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
-		            console.log(response);
+		            //console.log(response);
 		        });
 
             }
@@ -426,7 +426,7 @@ angular.module('Controllers')
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
-		            console.log(response);
+		            // console.log(response);
 		        });    
             }
         }
@@ -457,7 +457,7 @@ angular.module('Controllers')
 
 	// recieving new document message
 	$socket.on("new message PDF", function(data){
-		console.log("Recieved new pdf msg ", data);
+		//console.log("Recieved new pdf msg ", data);
 		if(data.username == $rootScope.username){
 			data.ownMsg = true;
 			data.dwimgsrc = "app/images/spin.gif";
@@ -473,11 +473,11 @@ angular.module('Controllers')
 
 	// replacing spinning wheel in sender message after document message delivered to everyone.
 	function checkMessegesPDF(msg){
-		console.log("inside checkMessegesPDF", msg);
+		// console.log("inside checkMessegesPDF", msg);
 		for (var i = ($scope.messeges.length-1); i >= 0 ; i--) {
 			if($scope.messeges[i].hasFile){
 				if ($scope.messeges[i].istype === "PDF") {
-					console.log("inside PDF", $scope.messeges[i]);					
+					// console.log("inside PDF", $scope.messeges[i]);					
 					if($scope.messeges[i].dwid === msg.dwid){
 						$scope.messeges[i].showme = true;
 						$scope.messeges[i].serverfilename = msg.serverfilename;
@@ -574,7 +574,7 @@ angular.module('Controllers')
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
-		            console.log(response);
+		            //console.log(response);
 		        });
             }
         }
@@ -606,7 +606,7 @@ angular.module('Controllers')
         	$scope.isFileSelected = true;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                console.log("filetype : ",file.type);
+                // console.log("filetype : ",file.type);
                 if (file.type == "application/pdf" || file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type == "text/plain" || file.type == "application/vnd.ms-excel") {
 					return "document";
 				}else if(file.type == "audio/mp3" || file.type == "audio/mpeg"){

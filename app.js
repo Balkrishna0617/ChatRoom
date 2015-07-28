@@ -1,6 +1,7 @@
 var express = require('express');			// express module
 var app = express();						// initiating express app
 var http = require('http');					// http module
+http.globalAgent.maxSockets = 100;
 var bodyParser = require('body-parser');	// body-parser module for reading request body
 var fs = require('fs');						// fs module for handling file operations
 var server = http.createServer(app);		// creating server
@@ -157,14 +158,6 @@ app.post('/v1/uploadImage',function (req, res){
     });
 });
 
-function baseName(str)
-{
-	console.log("This is mine : ", str);
-   var base = new String(str).substring(str.lastIndexOf('/') + 1); 
-    
-   return base;
-}
-
 // route for uploading audio asynchronously
 app.post('/v1/uploadAudio',function (req, res){
 	var userName, useravatar, hasfile, ismusicfile, isType, showMe, DWimgsrc, DWid, msgtime;
@@ -310,6 +303,12 @@ function bytesToSize(bytes) {
     if (i == 0) return bytes + ' ' + sizes[i]; 
     return (bytes / Math.pow(1024, i)).toFixed(2) + ' ' + sizes[i];
 };
+//get file name from server file path
+function baseName(str)
+{
+   var base = new String(str).substring(str.lastIndexOf('/') + 1);     
+   return base;
+}
 
 // Routine cleanup function (files delete after specific interval)
 function routine_cleanup()
