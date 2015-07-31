@@ -151,7 +151,7 @@ app.post('/v1/uploadImage',function (req, res){
 		        filetype : fields.istype,
 		        serverfilename : baseName(files.file.path),
 		        serverfilepath : files.file.path,
-		        expirytime : imgdatetimenow + (120000)           
+		        expirytime : imgdatetimenow + (3600000*8)           
 	    };
 	    files_array.push(image_file);
 		ios.sockets.emit('new message image', data);
@@ -195,7 +195,7 @@ app.post('/v1/uploadAudio',function (req, res){
 		        filetype : fields.istype,
 		        serverfilename : baseName(files.file.path),
 		        serverfilepath : files.file.path,
-		        expirytime : imgdatetimenow + (120000)           
+		        expirytime : imgdatetimenow + (3600000*8)           
 	    };
 	    files_array.push(audio_file);
 		ios.sockets.emit('new message music', data);
@@ -235,7 +235,7 @@ app.post('/v1/uploadPDF',function (req, res){
 		        filetype : fields.istype,
 		        serverfilename : baseName(files.file.path),
 		        serverfilepath : files.file.path,
-		        expirytime : imgdatetimenow + (120000)           
+		        expirytime : imgdatetimenow + (3600000*8)           
 	    };
 	    files_array.push(pdf_file);
 		ios.sockets.emit('new message PDF', data);
@@ -295,7 +295,7 @@ app.post('/v1/getfile', function(req, res){
 });
 
 // Routine Clean up call
-setInterval(function() {routine_cleanup();}, 60000 * 0.5 );
+setInterval(function() {routine_cleanup();}, 3600000);
 
 // Size Conversion
 function bytesToSize(bytes) {
